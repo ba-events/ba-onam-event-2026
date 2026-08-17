@@ -251,13 +251,28 @@ function verifyPin() {
     });
 }
 
-// ── API ───────────────────────────────────────────────────
-async function apiFetch(params) {
-  if (!API_URL) { toast("No API URL configured"); return null; }
-  try {
-    const r = await fetch(API_URL + "?" + new URLSearchParams(params));
-    return await r.json();
-  } catch(e) { toast("Network error"); return null; }
+// ── API (JSONP — bypasses CORS) ───────────────────────────
+function apiFetch(params) {
+  return new Promise((resolve) => {
+    if (!API_URL) { toast("No API URL configured"); resolve(null); return; }
+    const cbName = "_cb" + Date.now() + Math.floor(Math.random() * 1000);
+    const script = document.createElement("script");
+    const timer  = setTimeout(() => {
+      delete window[cbName]; script.remove();
+      toast("Request timed out"); resolve(null);
+    }, 15000);
+    window[cbName] = (data) => {
+      clearTimeout(timer); delete window[cbName]; script.remove();
+      resolve(data);
+    };
+    params.callback = cbName;
+    script.src = API_URL + "?" + new URLSearchParams(params);
+    script.onerror = () => {
+      clearTimeout(timer); delete window[cbName]; script.remove();
+      toast("Network error"); resolve(null);
+    };
+    document.head.appendChild(script);
+  });
 }
 
 async function loadStats() {

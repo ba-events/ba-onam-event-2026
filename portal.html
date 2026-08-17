@@ -313,13 +313,28 @@ function switchTab(id) {
   document.querySelectorAll(".panel").forEach(p => p.classList.toggle("active", p.id === "panel-" + id));
 }
 
-// ── API ───────────────────────────────────────────────────
-async function api(params) {
-  if (!API) { toast("Not connected"); return null; }
-  try {
-    const r = await fetch(API + "?" + new URLSearchParams(params));
-    return await r.json();
-  } catch(e) { toast("Network error: " + e.message); return null; }
+// ── API (JSONP — bypasses CORS) ───────────────────────────
+function api(params) {
+  return new Promise((resolve) => {
+    if (!API) { toast("Not connected"); resolve(null); return; }
+    const cbName = "_cb" + Date.now() + Math.floor(Math.random() * 1000);
+    const script = document.createElement("script");
+    const timer  = setTimeout(() => {
+      delete window[cbName]; script.remove();
+      toast("Request timed out"); resolve(null);
+    }, 15000);
+    window[cbName] = (data) => {
+      clearTimeout(timer); delete window[cbName]; script.remove();
+      resolve(data);
+    };
+    params.callback = cbName;
+    script.src = API + "?" + new URLSearchParams(params);
+    script.onerror = () => {
+      clearTimeout(timer); delete window[cbName]; script.remove();
+      toast("Network error"); resolve(null);
+    };
+    document.head.appendChild(script);
+  });
 }
 
 async function loadAll() {
