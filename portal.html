@@ -864,11 +864,11 @@ async function reject(rowNum) {
 async function resendWa(rowNum) {
   const pin = requirePin(); if (!pin) return;
   const data = await api({ action:"approve", row:rowNum, pin });
-  if (data && data.waUrl) window.open(data.waUrl, "whatsapp_web");
+  if (data && data.waUrl) window.open(data.waUrl, "_blank");
   else toast("Could not build WhatsApp link");
 }
 
-function openWa(el) { window.open(el.href, "whatsapp_web"); }
+function openWa(el) { window.open(el.href, "_blank"); }
 function closeApproveModal() { document.getElementById("modal").style.display = "none"; }
 
 // ── Live view ─────────────────────────────────────────────
