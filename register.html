@@ -228,7 +228,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
         <img id="upi-qr" src="" width="200" height="200" alt="UPI QR"/>
         <div>
           <span style="font-size:13px;color:var(--gray)">UPI ID:</span>
-          <span class="upi-id" id="upi-id-text">sajeevgeorge84@okhdfcbank</span>
+          <span class="upi-id" id="upi-id-text">sajeev****@okhdfcbank</span>
           <button class="copy-btn" onclick="copyUpi()">Copy</button>
         </div>
         <div class="amount-box" style="margin-top:14px;margin-bottom:0">
@@ -269,6 +269,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
         <div class="row"><span class="k">Adults</span><span class="v" id="conf-adults"></span></div>
         <div class="row"><span class="k">Kids</span><span class="v" id="conf-kids"></span></div>
         <div class="row"><span class="k">Amount Paid</span><span class="v" id="conf-amount"></span></div>
+        <div class="row" id="conf-ticket-row" style="display:none"><span class="k">Ticket ID</span><span class="v" id="conf-ticket" style="font-family:monospace;letter-spacing:2px;color:var(--brand)"></span></div>
         <div class="row" id="conf-email-row" style="display:none"><span class="k">Email</span><span class="v" id="conf-email"></span></div>
         <div class="row"><span class="k">Status</span><span class="v" style="color:var(--brand)">Pending Approval</span></div>
       </div>
@@ -407,8 +408,12 @@ async function submitRegistration() {
   document.getElementById("conf-adults").textContent = data.adults;
   document.getElementById("conf-kids").textContent   = data.kids;
   document.getElementById("conf-amount").textContent = "₹" + data.amount;
+  if (data.ticketId) {
+    document.getElementById("conf-ticket").textContent = data.ticketId;
+    document.getElementById("conf-ticket-row").style.display = "flex";
+  }
   if (data.email) {
-    document.getElementById("conf-email").textContent  = data.email;
+    document.getElementById("conf-email").textContent  = maskEmail(data.email);
     document.getElementById("conf-email-row").style.display = "flex";
   }
 
@@ -473,6 +478,12 @@ function jsonp(params) {
     };
     document.head.appendChild(script);
   });
+}
+
+function maskEmail(email) {
+  const [user, domain] = email.split("@");
+  const masked = user.length <= 2 ? "*".repeat(user.length) : user[0] + "*".repeat(user.length - 2) + user[user.length - 1];
+  return masked + "@" + domain;
 }
 
 function toast(msg) {
