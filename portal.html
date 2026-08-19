@@ -861,30 +861,30 @@ async function reject(rowNum) {
   else toast("Error rejecting");
 }
 
+function buildWaUrl(r) {
+  const phone = String(r.phone || "").replace(/\D/g, "");
+  const intl  = phone.length === 10 ? "91" + phone : phone;
+  const msg   = `Hi ${r.name} 👋\n\nYour ticket for *2026 Onam BA Event* is confirmed! 🎉\n\n📍 Birla Alokya Clubhouse, MPH\n📅 Saturday, 26 Sep 2026\n\n👥 Adults: ${r.adults}  |  Kids: ${r.kids}\n🏠 Flat: ${r.flat}\n🎟 Ticket ID: *${r.ticketId}*\n\n📲 Your QR code (screenshot & show at entry):\n${r.qrUrl}\n\nSee you there! 🎊`;
+  return "https://wa.me/" + intl + "?text=" + encodeURIComponent(msg);
+}
+
 function openWhatsApp(url) {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  if (isMobile) return true; // let native <a> tap handle it → opens app
-  window.open(url, "whatsapp_web"); // desktop: reuse named tab
+  if (isMobile) { location.href = url; }
+  else { window.open(url, "whatsapp_web"); }
+}
+
+function prepResend(el, rowNum) {
+  const r = allRows.find(x => x.rowNum === rowNum);
+  if (!r || !r.ticketId) { toast("No ticket found — approve first"); return false; }
+  openWhatsApp(buildWaUrl(r));
   return false;
 }
 
-async function prepResend(el, rowNum) {
-  if (el.dataset.waUrl) { openWhatsApp(el.dataset.waUrl); return false; }
-  const pin = requirePin(); if (!pin) return false;
-  el.textContent = "Loading…";
-  const data = await api({ action:"approve", row:rowNum, pin });
-  if (data && data.waUrl) {
-    el.dataset.waUrl = data.waUrl;
-    el.href = data.waUrl;
-    openWhatsApp(data.waUrl);
-  } else {
-    toast("Could not build WhatsApp link");
-  }
-  el.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.126.558 4.122 1.535 5.852L.057 23.68a.75.75 0 00.912.944l5.932-1.553A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.95 9.95 0 01-5.073-1.38l-.363-.217-3.753.983.999-3.657-.236-.374A9.953 9.953 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg> Resend WhatsApp Ticket`;
+function openWa(el) {
+  openWhatsApp(el.href);
   return false;
 }
-
-function openWa(el) { return openWhatsApp(el.href); }
 function closeApproveModal() { document.getElementById("modal").style.display = "none"; }
 
 // ── Live view ─────────────────────────────────────────────
