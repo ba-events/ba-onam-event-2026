@@ -587,7 +587,7 @@ function api(params) {
     const script = document.createElement("script");
     const timer  = setTimeout(() => {
       delete window[cbName]; script.remove(); toast("Request timed out"); resolve(null);
-    }, 15000);
+    }, 30000);
     window[cbName] = (data) => { clearTimeout(timer); delete window[cbName]; script.remove(); resolve(data); };
     params.callback = cbName;
     script.src = API + "?" + new URLSearchParams(params);

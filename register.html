@@ -296,7 +296,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 
 <script>
 // ── CONFIG — paste your Apps Script Web App URL here ──────
-const API_URL = "https://script.google.com/macros/s/AKfycbxkt7z95rW15L7Sh0xptd7uLYUwhoIZDxu59pq7zNfF6n6-F3gHn82Qo4NmdLUqKvz-nQ/exec";
+const API_URL = "PASTE_YOUR_NEW_EXEC_URL_HERE";
 const UPI_ID  = "sajeevgeorge84@okhdfcbank";
 const UPI_NAME = "2026 Onam BA Event";
 
@@ -460,7 +460,7 @@ function jsonp(params) {
     const timer  = setTimeout(() => {
       delete window[cbName]; script.remove();
       toast("Request timed out"); resolve(null);
-    }, 15000);
+    }, 30000);
     window[cbName] = (data) => {
       clearTimeout(timer); delete window[cbName]; script.remove();
       resolve(data);
