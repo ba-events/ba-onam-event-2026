@@ -180,14 +180,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
       </div>
       <div class="field" id="f-flat">
         <label>BA Unit # *</label>
-        <input id="inp-flat" type="text" placeholder="e.g. A-304"/>
+        <input id="inp-flat" type="text" placeholder="e.g. B01-01"/>
         <div class="err-msg">Please enter your unit number</div>
       </div>
       <div class="field" id="f-phone">
         <label>WhatsApp Number *</label>
-        <input id="inp-phone" type="tel" inputmode="numeric" placeholder="10-digit mobile number" maxlength="10"/>
+        <input id="inp-phone" type="tel" inputmode="numeric" placeholder="10-digit mobile number" maxlength="10" oninput="this.value=this.value.replace(/\D/g,'')"/>
         <div class="hint">Your ticket will be sent to this number</div>
-        <div class="err-msg">Enter a valid 10-digit number</div>
+        <div class="err-msg">Please enter a valid 10-digit mobile number</div>
       </div>
       <div class="field" id="f-email">
         <label>Email Address <span style="color:var(--gray);font-weight:400">(optional)</span></label>
