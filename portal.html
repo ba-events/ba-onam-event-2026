@@ -534,7 +534,7 @@ tr:hover td { background: var(--brand-bg); }
     <img id="m-qr" src="" width="180" height="180" alt="QR"/>
     <div class="tid" id="m-tid"></div>
     <div class="modal-btns">
-      <a id="m-wa" class="wa-btn" href="#" onclick="openWa(this);return false;">
+      <a id="m-wa" class="wa-btn" href="#" target="_blank" rel="noopener">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.126.558 4.122 1.535 5.852L.057 23.68a.75.75 0 00.912.944l5.932-1.553A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.95 9.95 0 01-5.073-1.38l-.363-.217-3.753.983.999-3.657-.236-.374A9.953 9.953 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
         Send via WhatsApp
       </a>
@@ -782,10 +782,10 @@ function openDrawer(rowNum) {
       <button class="btn-reject" onclick="reject(${r.rowNum})">✗</button>
     </div>`;
   } else if (["APPROVED","PARTIAL","CHECKED_IN"].includes(r.status)) {
-    actions = `<button class="wa-resend-btn" onclick="resendWa(${r.rowNum})">
+    actions = `<a class="wa-resend-btn" id="resend-wa-${r.rowNum}" href="#" target="_blank" rel="noopener" onclick="return prepResend(this,${r.rowNum})">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.126.558 4.122 1.535 5.852L.057 23.68a.75.75 0 00.912.944l5.932-1.553A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.95 9.95 0 01-5.073-1.38l-.363-.217-3.753.983.999-3.657-.236-.374A9.953 9.953 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
       Resend WhatsApp Ticket
-    </button>`;
+    </a>`;
   }
 
   const content = `
@@ -861,14 +861,23 @@ async function reject(rowNum) {
   else toast("Error rejecting");
 }
 
-async function resendWa(rowNum) {
-  const pin = requirePin(); if (!pin) return;
+async function prepResend(el, rowNum) {
+  // If href already resolved (second tap), let it open
+  if (el.href && !el.href.endsWith("#")) return true;
+  const pin = requirePin(); if (!pin) return false;
+  el.textContent = "Loading…";
   const data = await api({ action:"approve", row:rowNum, pin });
-  if (data && data.waUrl) window.open(data.waUrl, "_blank");
-  else toast("Could not build WhatsApp link");
+  if (data && data.waUrl) {
+    el.href = data.waUrl;
+    el.click(); // re-trigger the native tap now that href is set
+  } else {
+    toast("Could not build WhatsApp link");
+    el.innerHTML = "Resend WhatsApp Ticket";
+  }
+  return false;
 }
 
-function openWa(el) { window.open(el.href, "_blank"); }
+function openWa(el) { /* no-op — modal <a> uses native tap via href */ }
 function closeApproveModal() { document.getElementById("modal").style.display = "none"; }
 
 // ── Live view ─────────────────────────────────────────────
