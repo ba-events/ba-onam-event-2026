@@ -397,13 +397,30 @@ async function submitRegistration() {
     utr:    utr,
   });
 
+  // Auto-retry once if server was busy
+  if (data && !data.ok && data.message && data.message.includes("busy")) {
+    toast("Server busy — retrying…");
+    await new Promise(r => setTimeout(r, 3000));
+    const retry = await jsonp({
+      action: "register",
+      name:   formData.name, flat: formData.flat, phone: formData.phone,
+      email:  formData.email || "", adults: formData.adults, kids: formData.kids, utr,
+    });
+    btn.innerHTML = "✅ Submit Registration"; btn.disabled = false;
+    if (!retry) return;
+    if (!retry.ok) { toast(retry.message || "Submission failed"); return; }
+    handleSuccess(retry); return;
+  }
+
   btn.innerHTML = "✅ Submit Registration";
   btn.disabled = false;
 
   if (!data) return;
   if (!data.ok) { toast(data.message || "Submission failed"); return; }
+  handleSuccess(data);
+}
 
-  document.getElementById("conf-name").textContent   = "Hi, " + data.name + "! 👋";
+function handleSuccess(data) {
   document.getElementById("conf-flat").textContent   = data.flat;
   document.getElementById("conf-adults").textContent = data.adults;
   document.getElementById("conf-kids").textContent   = data.kids;
