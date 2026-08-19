@@ -386,6 +386,9 @@ async function submitRegistration() {
   btn.innerHTML = '<span class="spin"></span> Submitting…';
   btn.disabled = true;
 
+  // Spread concurrent users across 0–2s to avoid hitting Apps Script concurrency cap
+  await new Promise(r => setTimeout(r, Math.random() * 2000));
+
   const data = await jsonp({
     action: "register",
     name:   formData.name,
@@ -397,18 +400,17 @@ async function submitRegistration() {
     utr:    utr,
   });
 
-  // Auto-retry once if server was busy
-  if (data && !data.ok && data.message && data.message.includes("busy")) {
-    toast("Server busy — retrying…");
-    await new Promise(r => setTimeout(r, 3000));
+  // Auto-retry once on null (network drop) or server error
+  if (!data || (!data.ok && data.message && (data.message.includes("busy") || data.message.includes("error")))) {
+    toast("Retrying…");
+    await new Promise(r => setTimeout(r, 2000 + Math.random() * 2000));
     const retry = await jsonp({
       action: "register",
       name:   formData.name, flat: formData.flat, phone: formData.phone,
       email:  formData.email || "", adults: formData.adults, kids: formData.kids, utr,
     });
     btn.innerHTML = "✅ Submit Registration"; btn.disabled = false;
-    if (!retry) return;
-    if (!retry.ok) { toast(retry.message || "Submission failed"); return; }
+    if (!retry || !retry.ok) { toast((retry && retry.message) || "Submission failed — please try again"); return; }
     handleSuccess(retry); return;
   }
 

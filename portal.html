@@ -111,26 +111,46 @@ header .pin-tag { font-size: 11px; background: rgba(255,255,255,.2); border-radi
 .filter-bar select { padding: 9px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; background: #fff; }
 .filter-bar button { padding: 9px 16px; background: var(--brand); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; }
 
-/* Review cards */
-.review-grid { display: flex; flex-direction: column; gap: 8px; }
-.reg-card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
-.card-header { padding: 13px 16px; display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
-.card-header:hover { background: #fafbff; }
-.card-header .person-name { font-size: 14px; font-weight: 700; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card-header .flat-badge { background: var(--brand-bg); color: var(--brand); font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 20px; white-space: nowrap; }
-.card-header .chevron { color: var(--gray); transition: transform .2s; flex-shrink: 0; }
-.reg-card.open .card-header .chevron { transform: rotate(180deg); }
-.card-body { max-height: 0; overflow: hidden; transition: max-height .25s ease; }
-.reg-card.open .card-body { max-height: 600px; }
-.card-divider { height: 1px; background: var(--border); }
-.card-meta { padding: 12px 16px 8px; font-size: 13px; color: var(--gray); display: flex; flex-direction: column; gap: 5px; }
-.card-actions { padding: 10px 16px 14px; display: flex; gap: 8px; }
-.btn-approve { flex: 1; background: var(--green); color: #fff; border: none; padding: 9px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
+/* Review grid — square tiles */
+.review-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+.reg-tile {
+  background: #fff; border-radius: var(--radius); box-shadow: var(--shadow);
+  border: 2px solid transparent; cursor: pointer; user-select: none;
+  aspect-ratio: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 5px;
+  padding: 10px 8px; text-align: center; transition: border-color .15s, box-shadow .15s;
+  position: relative; overflow: hidden;
+}
+.reg-tile:hover { border-color: var(--brand); box-shadow: 0 4px 14px rgba(79,70,229,.15); }
+.reg-tile.open  { border-color: var(--brand); background: var(--brand-bg); }
+.reg-tile .t-status { position: absolute; top: 7px; right: 7px; width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.reg-tile .t-flat { font-size: 11px; font-weight: 700; color: var(--brand); background: var(--brand-bg); padding: 2px 8px; border-radius: 20px; }
+.reg-tile .t-name { font-size: 12px; font-weight: 700; color: #0f172a; line-height: 1.3; word-break: break-word; }
+.t-PENDING    .t-status { background: var(--yellow); }
+.t-APPROVED   .t-status { background: var(--brand); }
+.t-PARTIAL    .t-status { background: var(--orange); }
+.t-REJECTED   .t-status { background: var(--gray); }
+.t-CHECKED_IN .t-status { background: var(--green); }
+
+/* Detail drawer — shown below selected tile row */
+.tile-drawer {
+  grid-column: 1 / -1; background: #fff; border-radius: var(--radius);
+  box-shadow: 0 4px 16px rgba(0,0,0,.1); border: 2px solid var(--brand);
+  overflow: hidden; display: none;
+}
+.tile-drawer.open { display: block; }
+.drawer-header { padding: 12px 16px; background: var(--brand-bg); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.drawer-header .dh-name { font-size: 15px; font-weight: 700; }
+.drawer-header .dh-close { background: none; border: none; font-size: 18px; cursor: pointer; color: var(--gray); line-height: 1; padding: 0 4px; }
+.drawer-meta { padding: 12px 16px 4px; font-size: 13px; color: var(--gray); display: flex; flex-direction: column; gap: 5px; }
+.drawer-pay { margin: 8px 16px; padding: 8px 12px; background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; color: var(--gray); }
+.drawer-actions { padding: 10px 16px 14px; display: flex; gap: 8px; }
+.btn-approve { flex: 1; background: var(--green); color: #fff; border: none; padding: 10px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
 .btn-approve:hover { background: #15803d; }
 .btn-approve:disabled { opacity: .6; cursor: not-allowed; }
-.btn-reject { background: #f3f4f6; color: var(--red); border: 1px solid #fca5a5; padding: 9px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.btn-reject { background: #f3f4f6; color: var(--red); border: 1px solid #fca5a5; padding: 10px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
 .btn-reject:hover { background: var(--red-bg); }
-.wa-resend-btn { display: flex; align-items: center; justify-content: center; gap: 8px; background: #25d366; color: #fff; border: none; padding: 10px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; margin: 8px 16px 14px; }
+.wa-resend-btn { display: flex; align-items: center; justify-content: center; gap: 8px; background: #25d366; color: #fff; border: none; padding: 10px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; margin: 0 16px 14px; }
 .wa-resend-btn:hover { background: #1ebe5d; }
 .status-tag { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; flex-shrink: 0; }
 .s-PENDING    { background: var(--yellow-bg); color: var(--yellow); }
@@ -138,6 +158,7 @@ header .pin-tag { font-size: 11px; background: rgba(255,255,255,.2); border-radi
 .s-PARTIAL    { background: #ffedd5;           color: var(--orange); }
 .s-REJECTED   { background: #f3f4f6;           color: var(--gray); }
 .s-CHECKED_IN { background: var(--green-bg);   color: var(--green); }
+@media (max-width: 640px) { .review-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; } }
 
 /* Live view */
 .flat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 1px; background: var(--border); }
@@ -262,12 +283,20 @@ tr:hover td { background: var(--brand-bg); }
   .filter-bar input, .filter-bar select { font-size: 13px; padding: 8px 10px; }
   .filter-bar button { padding: 8px 12px; font-size: 13px; }
 
-  /* Review cards */
-  .card-header { padding: 11px 12px; gap: 8px; }
-  .card-header .person-name { font-size: 13px; }
-  .card-header .flat-badge { font-size: 10px; padding: 2px 7px; }
-  .card-meta { padding: 10px 12px 6px; font-size: 12px; }
-  .card-actions { padding: 8px 12px 12px; flex-wrap: wrap; }
+  /* Review tiles */
+  .review-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 7px; }
+  .reg-tile { padding: 8px 6px 10px; gap: 5px; }
+  .reg-tile .t-flat { font-size: 10px; padding: 2px 6px; }
+  .reg-tile .t-name { font-size: 11px; }
+  .reg-tile .t-status { width: 8px; height: 8px; top: 5px; right: 5px; }
+
+  /* Tile drawer */
+  .tile-drawer { margin: 0; border-radius: 8px; }
+  .drawer-header { padding: 10px 12px; flex-wrap: wrap; gap: 6px; }
+  .drawer-header .dh-name { font-size: 13px; }
+  .drawer-meta { padding: 10px 12px 4px; font-size: 12px; }
+  .drawer-pay { margin: 6px 12px; font-size: 11px; }
+  .drawer-actions { padding: 8px 12px 12px; flex-wrap: wrap; }
   .btn-approve { font-size: 12px; padding: 9px 6px; }
   .wa-resend-btn { margin: 6px 12px 12px; font-size: 12px; padding: 9px; }
 
@@ -630,7 +659,9 @@ function updateStats(s) {
   if (bar) bar.style.width = pct + "%";
 }
 
-// ── Review cards ──────────────────────────────────────────
+// ── Review tiles ──────────────────────────────────────────
+let openTileRow = null;
+
 function renderReview() {
   const q = (document.getElementById("rev-q").value || "").toLowerCase();
   const f = document.getElementById("rev-f").value;
@@ -639,48 +670,75 @@ function renderReview() {
     return mQ && (!f || r.status === f);
   });
   const grid = document.getElementById("review-grid");
-  grid.innerHTML = rows.length ? rows.map(cardHtml).join("") : `<div class="empty">No registrations found</div>`;
+  if (!rows.length) { grid.innerHTML = `<div class="empty" style="grid-column:1/-1">No registrations found</div>`; return; }
+  grid.innerHTML = rows.map(tileHtml).join("") + `<div class="tile-drawer" id="tile-drawer"></div>`;
 }
 
-function toggleCard(rowNum) {
-  const card = document.getElementById("card-" + rowNum);
-  if (card) card.classList.toggle("open");
+function tileHtml(r) {
+  return `<div class="reg-tile t-${esc(r.status)}" id="tile-${r.rowNum}" onclick="openDrawer(${r.rowNum})">
+    <div class="t-status" title="${statusLabel(r.status)}"></div>
+    <div class="t-flat">${esc(r.flat)}</div>
+    <div class="t-name">${esc(r.name)}</div>
+  </div>`;
 }
 
-function cardHtml(r) {
+function openDrawer(rowNum) {
+  const r = allRows.find(x => x.rowNum === rowNum);
+  if (!r) return;
+
+  // Deselect if same tile clicked again
+  if (openTileRow === rowNum) {
+    closeDrawer(); return;
+  }
+  openTileRow = rowNum;
+
+  document.querySelectorAll(".reg-tile").forEach(t => t.classList.remove("open"));
+  document.getElementById("tile-" + rowNum).classList.add("open");
+
   const payInfo = r.payUrl
-    ? `<div style="margin:0 16px 10px;padding:8px 12px;background:#f8fafc;border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--gray)">💰 Amount Paid: <strong style="color:#0f172a">${esc(r.payUrl)}</strong></div>`
-    : `<p style="margin:0 16px 10px;font-size:12px;color:var(--gray)">No payment info</p>`;
-  let footer = "";
+    ? `<div class="drawer-pay">💰 ${esc(r.payUrl)}</div>`
+    : `<div class="drawer-pay" style="color:var(--gray)">No payment info</div>`;
+
+  let actions = "";
   if (r.status === "PENDING") {
-    footer = `<div class="card-actions">
-      <button class="btn-approve" id="appr-${r.rowNum}" onclick="event.stopPropagation();approve(${r.rowNum})">✅ Approve & Send Ticket</button>
-      <button class="btn-reject" onclick="event.stopPropagation();reject(${r.rowNum})">✗</button>
+    actions = `<div class="drawer-actions">
+      <button class="btn-approve" id="appr-${r.rowNum}" onclick="approve(${r.rowNum})">✅ Approve & Send Ticket</button>
+      <button class="btn-reject" onclick="reject(${r.rowNum})">✗</button>
     </div>`;
   } else if (["APPROVED","PARTIAL","CHECKED_IN"].includes(r.status)) {
-    footer = `<button class="wa-resend-btn" onclick="event.stopPropagation();resendWa(${r.rowNum})">
+    actions = `<button class="wa-resend-btn" onclick="resendWa(${r.rowNum})">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.126.558 4.122 1.535 5.852L.057 23.68a.75.75 0 00.912.944l5.932-1.553A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.95 9.95 0 01-5.073-1.38l-.363-.217-3.753.983.999-3.657-.236-.374A9.953 9.953 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
       Resend WhatsApp Ticket
     </button>`;
   }
-  return `<div class="reg-card" id="card-${r.rowNum}">
-    <div class="card-header" onclick="toggleCard(${r.rowNum})">
-      <span class="status-tag s-${esc(r.status)}">${statusLabel(r.status)}</span>
-      <span class="person-name">${esc(r.name)}</span>
-      <span class="flat-badge">🏠 ${esc(r.flat)}</span>
-      <svg class="chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-    </div>
-    <div class="card-body">
-      <div class="card-divider"></div>
-      <div class="card-meta">
-        <span>📞 ${esc(r.phone||"—")}</span>
-        <span>👥 ${r.adults} adult${r.adults!=1?"s":""} · ${r.kids} kid${r.kids!=1?"s":""}</span>
-        ${r.ticketId ? `<span>🎟 <code style="font-size:12px;letter-spacing:1px">${esc(r.ticketId)}</code></span>` : ""}
+
+  const drawer = document.getElementById("tile-drawer");
+  drawer.innerHTML = `
+    <div class="drawer-header">
+      <div>
+        <span class="status-tag s-${esc(r.status)}" style="margin-right:8px">${statusLabel(r.status)}</span>
+        <span class="dh-name">${esc(r.name)} · ${esc(r.flat)}</span>
       </div>
-      ${payInfo}${footer}
+      <button class="dh-close" onclick="closeDrawer()">✕</button>
     </div>
-  </div>`;
+    <div class="drawer-meta">
+      <span>📞 ${esc(r.phone||"—")}</span>
+      <span>👥 ${r.adults} adult${r.adults!=1?"s":""} · ${r.kids} kid${r.kids!=1?"s":""}</span>
+      ${r.ticketId ? `<span>🎟 <code style="font-size:12px;letter-spacing:1px">${esc(r.ticketId)}</code></span>` : ""}
+    </div>
+    ${payInfo}${actions}`;
+  drawer.classList.add("open");
+  drawer.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
+
+function closeDrawer() {
+  openTileRow = null;
+  document.querySelectorAll(".reg-tile").forEach(t => t.classList.remove("open"));
+  const d = document.getElementById("tile-drawer");
+  if (d) d.classList.remove("open");
+}
+
+function toggleCard(rowNum) { openDrawer(rowNum); }
 
 // ── Approve / Reject ──────────────────────────────────────
 async function approve(rowNum) {
