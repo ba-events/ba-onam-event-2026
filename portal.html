@@ -433,26 +433,18 @@ tr:hover td { background: var(--brand-bg); }
     <div class="stat checkin">  <div class="n" id="s-checkin">–</div>  <div class="l">Checked In</div></div>
     <div class="stat people">   <div class="n" id="s-people">–</div>   <div class="l">Total People</div></div>
   </div>
-  <div class="unit-stats-row">
+  <div class="unit-stats-row" style="grid-template-columns:1fr">
     <div class="unit-stat">
-      <div class="us-label">🏠 Units Registered vs Approved</div>
+      <div class="us-label">🏠 Unique BA Units — Submitted vs Approved</div>
       <div class="us-numbers">
         <span class="us-a" id="us-reg">–</span>
-        <span class="us-sep">registered</span>
-        <span class="us-b" id="us-appr">–</span>
-        <span class="us-sep">approved</span>
+        <span class="us-sep">units submitted</span>
+        <span style="color:#cbd5e1;font-size:18px">/</span>
+        <span class="us-a" style="color:var(--brand)" id="us-appr">–</span>
+        <span class="us-sep">units approved</span>
       </div>
+      <div class="us-sub" id="us-reg-note" style="font-size:11px;color:var(--gray);margin-bottom:6px"></div>
       <div class="us-bar"><div class="us-fill us-fill-appr" id="us-appr-bar" style="width:0%"></div></div>
-    </div>
-    <div class="unit-stat">
-      <div class="us-label">✅ Units Checked-In vs Pending</div>
-      <div class="us-numbers">
-        <span class="us-a us-green" id="us-cin">–</span>
-        <span class="us-sep">checked-in</span>
-        <span class="us-b us-orange" id="us-pend">–</span>
-        <span class="us-sep">pending</span>
-      </div>
-      <div class="us-bar"><div class="us-fill us-fill-cin" id="us-cin-bar" style="width:0%"></div></div>
     </div>
   </div>
   <div class="filter-bar">
@@ -481,6 +473,20 @@ tr:hover td { background: var(--brand-bg); }
     <div class="stat approved"><div class="n" id="sc-rem">–</div> <div class="l">Not Yet In</div></div>
     <div class="stat people">  <div class="n" id="sc-ad">–</div>  <div class="l">Adults In</div></div>
     <div class="stat people">  <div class="n" id="sc-ki">–</div>  <div class="l">Kids In</div></div>
+  </div>
+  <div class="unit-stats-row" style="grid-template-columns:1fr;margin-bottom:16px">
+    <div class="unit-stat">
+      <div class="us-label">✅ Unique BA Units — Checked-In vs Pending</div>
+      <div class="us-numbers">
+        <span class="us-a us-green" id="us-cin">–</span>
+        <span class="us-sep">units checked-in</span>
+        <span style="color:#cbd5e1;font-size:18px">/</span>
+        <span class="us-a us-orange" id="us-pend">–</span>
+        <span class="us-sep">units pending arrival</span>
+      </div>
+      <div class="us-sub" id="us-cin-note" style="font-size:11px;color:var(--gray);margin-bottom:6px"></div>
+      <div class="us-bar"><div class="us-fill us-fill-cin" id="us-cin-bar" style="width:0%"></div></div>
+    </div>
   </div>
   <div style="background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px;margin-bottom:16px">
     <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:8px">
@@ -562,7 +568,8 @@ tr:hover td { background: var(--brand-bg); }
         <option value="50">50 / page</option>
         <option value="100">100 / page</option>
       </select>
-      <button onclick="loadAll()">↻ Refresh</button>
+      <div id="all-pagination" style="display:flex;align-items:center;gap:4px;flex-wrap:wrap"></div>
+      <button onclick="loadAll()" style="margin-left:auto">↻ Refresh</button>
     </div>
     <div class="tbl-scroll">
       <table>
@@ -581,7 +588,7 @@ tr:hover td { background: var(--brand-bg); }
         <tbody id="all-tbody"><tr><td colspan="10" class="empty">Connect to load</td></tr></tbody>
       </table>
     </div>
-    <div class="pagination-bar" id="all-pagination"></div>
+  </div>
   </div>
 </div>
 
@@ -743,15 +750,24 @@ function updateStats(s) {
 }
 
 function updateUnitStats() {
-  const active = allRows.filter(r => r.status !== "REJECTED");
-  const unitsReg  = new Set(active.map(r => r.flat)).size;
-  const unitsAppr = new Set(active.filter(r => ["APPROVED","PARTIAL","CHECKED_IN"].includes(r.status)).map(r => r.flat)).size;
-  const unitsCin  = new Set(active.filter(r => ["PARTIAL","CHECKED_IN"].includes(r.status)).map(r => r.flat)).size;
-  const unitsPend = new Set(active.filter(r => r.status === "APPROVED").map(r => r.flat)).size;
+  const active     = allRows.filter(r => r.status !== "REJECTED");
+  const totalRegs  = active.length;
+  const unitsReg   = new Set(active.map(r => r.flat)).size;
+  const unitsAppr  = new Set(active.filter(r => ["APPROVED","PARTIAL","CHECKED_IN"].includes(r.status)).map(r => r.flat)).size;
+  const unitsCin   = new Set(active.filter(r => ["PARTIAL","CHECKED_IN"].includes(r.status)).map(r => r.flat)).size;
+  const unitsPend  = new Set(active.filter(r => r.status === "APPROVED").map(r => r.flat)).size;
+
   set("us-reg",  unitsReg);
   set("us-appr", unitsAppr);
   set("us-cin",  unitsCin);
   set("us-pend", unitsPend);
+
+  // Clarifying notes: unique units vs total registrations
+  const regNote  = document.getElementById("us-reg-note");
+  const cinNote  = document.getElementById("us-cin-note");
+  if (regNote) regNote.textContent = totalRegs + " total registrations across " + unitsReg + " unique units";
+  if (cinNote) cinNote.textContent = unitsAppr + " units approved — " + unitsCin + " fully/partially in, " + unitsPend + " awaiting";
+
   const apprPct = unitsReg  > 0 ? Math.round(unitsAppr / unitsReg  * 100) : 0;
   const cinPct  = unitsAppr > 0 ? Math.round(unitsCin  / unitsAppr * 100) : 0;
   const apprBar = document.getElementById("us-appr-bar");
