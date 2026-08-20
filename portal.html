@@ -96,7 +96,7 @@ header .pin-tag { font-size: 11px; background: rgba(255,255,255,.2); border-radi
 .panel.active { display: block; }
 
 /* Stats */
-.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px,1fr)); gap: 12px; margin-bottom: 20px; }
+.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px,1fr)); gap: 12px; margin-bottom: 12px; }
 .stat { background: #fff; border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); text-align: center; }
 .stat .n { font-size: 28px; font-weight: 800; }
 .stat .l { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: .4px; margin-top: 2px; }
@@ -104,6 +104,21 @@ header .pin-tag { font-size: 11px; background: rgba(255,255,255,.2); border-radi
 .stat.approved .n { color: var(--brand); }
 .stat.checkin  .n { color: var(--green); }
 .stat.people   .n { color: var(--orange); }
+
+/* Unit-level stats row */
+.unit-stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+.unit-stat { background: #fff; border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow); }
+.us-label { font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 8px; }
+.us-numbers { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+.us-a { font-size: 24px; font-weight: 800; color: var(--brand); }
+.us-a.us-green { color: var(--green); }
+.us-a.us-orange { color: var(--orange); }
+.us-b { font-size: 20px; font-weight: 700; color: #94a3b8; }
+.us-sep { font-size: 11px; color: var(--gray); }
+.us-bar { background: #e5e7eb; border-radius: 20px; height: 6px; overflow: hidden; }
+.us-fill { height: 100%; border-radius: 20px; transition: width .5s; }
+.us-fill-appr { background: var(--brand); }
+.us-fill-cin  { background: var(--green); }
 
 /* Filter bar */
 .filter-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
@@ -149,11 +164,22 @@ header .pin-tag { font-size: 11px; background: rgba(255,255,255,.2); border-radi
   display: flex; align-items: center; gap: 8px;
 }
 .group-header:first-child { margin-top: 0; }
+.group-toggle { margin-left: auto; background: none; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; font-size: 11px; color: var(--gray); padding: 1px 7px; line-height: 1.6; }
+.group-toggle:hover { background: var(--brand-bg); border-color: var(--brand); color: var(--brand); }
 .group-count {
   background: var(--brand-bg); color: var(--brand);
   font-size: 11px; font-weight: 700; padding: 1px 8px;
   border-radius: 20px;
 }
+
+/* Pagination */
+.pagination-bar { display: flex; align-items: center; gap: 5px; padding: 10px 16px; border-top: 1px solid var(--border); flex-wrap: wrap; background: #fff; border-radius: 0 0 var(--radius) var(--radius); }
+.pg-btn { padding: 5px 10px; border: 1px solid var(--border); border-radius: 5px; background: #fff; cursor: pointer; font-size: 13px; color: #374151; }
+.pg-btn:hover:not(:disabled) { background: var(--brand-bg); border-color: var(--brand); color: var(--brand); }
+.pg-btn.active { background: var(--brand); color: #fff; border-color: var(--brand); font-weight: 700; }
+.pg-btn:disabled { opacity: .35; cursor: not-allowed; }
+.pg-info { font-size: 12px; color: var(--gray); margin-left: auto; white-space: nowrap; }
+.pg-size { padding: 5px 8px; border: 1px solid var(--border); border-radius: 5px; font-size: 13px; background: #fff; margin-left: 8px; }
 .drawer-header { padding: 12px 16px; background: var(--brand-bg); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
 .drawer-header .dh-name { font-size: 15px; font-weight: 700; }
 .drawer-header .dh-close { background: none; border: none; font-size: 18px; cursor: pointer; color: var(--gray); line-height: 1; padding: 0 4px; }
@@ -287,10 +313,14 @@ tr:hover td { background: var(--brand-bg); }
   .panel { padding: 12px 12px 20px; }
 
   /* Stats */
-  .stats-row { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 12px; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 8px; }
   .stat { padding: 12px 8px; }
   .stat .n { font-size: 22px; }
   .stat .l { font-size: 10px; }
+  .unit-stats-row { grid-template-columns: 1fr; gap: 8px; margin-bottom: 12px; }
+  .unit-stat { padding: 12px 14px; }
+  .us-a { font-size: 20px; }
+  .us-b { font-size: 17px; }
   .stats-bar { gap: 8px; }
 
   /* Filter bar */
@@ -403,6 +433,28 @@ tr:hover td { background: var(--brand-bg); }
     <div class="stat checkin">  <div class="n" id="s-checkin">–</div>  <div class="l">Checked In</div></div>
     <div class="stat people">   <div class="n" id="s-people">–</div>   <div class="l">Total People</div></div>
   </div>
+  <div class="unit-stats-row">
+    <div class="unit-stat">
+      <div class="us-label">🏠 Units Registered vs Approved</div>
+      <div class="us-numbers">
+        <span class="us-a" id="us-reg">–</span>
+        <span class="us-sep">registered</span>
+        <span class="us-b" id="us-appr">–</span>
+        <span class="us-sep">approved</span>
+      </div>
+      <div class="us-bar"><div class="us-fill us-fill-appr" id="us-appr-bar" style="width:0%"></div></div>
+    </div>
+    <div class="unit-stat">
+      <div class="us-label">✅ Units Checked-In vs Pending</div>
+      <div class="us-numbers">
+        <span class="us-a us-green" id="us-cin">–</span>
+        <span class="us-sep">checked-in</span>
+        <span class="us-b us-orange" id="us-pend">–</span>
+        <span class="us-sep">pending</span>
+      </div>
+      <div class="us-bar"><div class="us-fill us-fill-cin" id="us-cin-bar" style="width:0%"></div></div>
+    </div>
+  </div>
   <div class="filter-bar">
     <input id="rev-q" type="text" placeholder="Search name or unit…" oninput="renderReview()"/>
     <select id="rev-f" onchange="renderReview()">
@@ -504,6 +556,12 @@ tr:hover td { background: var(--brand-bg); }
         <option value="CHECKED_IN">Checked In</option>
         <option value="REJECTED">Rejected</option>
       </select>
+      <select id="all-ps" onchange="allPageSize=+this.value;allPage=1;renderAll()">
+        <option value="20">20 / page</option>
+        <option value="40">40 / page</option>
+        <option value="50">50 / page</option>
+        <option value="100">100 / page</option>
+      </select>
       <button onclick="loadAll()">↻ Refresh</button>
     </div>
     <div class="tbl-scroll">
@@ -523,6 +581,7 @@ tr:hover td { background: var(--brand-bg); }
         <tbody id="all-tbody"><tr><td colspan="10" class="empty">Connect to load</td></tr></tbody>
       </table>
     </div>
+    <div class="pagination-bar" id="all-pagination"></div>
   </div>
 </div>
 
@@ -576,6 +635,8 @@ let SCANNER_PIN = localStorage.getItem("scanner_pin") || "";
 
 // ── State ─────────────────────────────────────────────────
 let allRows = [], sortField = "name", sortAsc = true;
+let allPage = 1, allPageSize = 20;
+let collapsedGroups = new Set();
 let scanner = null, scanning = false, cooldown = false;
 let pendingTicket = null, pendingRemaining = 0;
 let recentLogs = [];
@@ -650,6 +711,7 @@ async function loadAll() {
   if (list && list.ok) {
     allRows = list.rows || [];
     renderReview(); renderAll(); renderFlatGrid(allRows);
+    updateUnitStats();
   }
   if (stats && stats.ok) updateStats(stats);
 }
@@ -678,6 +740,24 @@ function updateStats(s) {
   set("lv-tot-lbl", s.total + " registered");
   const bar = document.getElementById("lv-bar");
   if (bar) bar.style.width = pct + "%";
+}
+
+function updateUnitStats() {
+  const active = allRows.filter(r => r.status !== "REJECTED");
+  const unitsReg  = new Set(active.map(r => r.flat)).size;
+  const unitsAppr = new Set(active.filter(r => ["APPROVED","PARTIAL","CHECKED_IN"].includes(r.status)).map(r => r.flat)).size;
+  const unitsCin  = new Set(active.filter(r => ["PARTIAL","CHECKED_IN"].includes(r.status)).map(r => r.flat)).size;
+  const unitsPend = new Set(active.filter(r => r.status === "APPROVED").map(r => r.flat)).size;
+  set("us-reg",  unitsReg);
+  set("us-appr", unitsAppr);
+  set("us-cin",  unitsCin);
+  set("us-pend", unitsPend);
+  const apprPct = unitsReg  > 0 ? Math.round(unitsAppr / unitsReg  * 100) : 0;
+  const cinPct  = unitsAppr > 0 ? Math.round(unitsCin  / unitsAppr * 100) : 0;
+  const apprBar = document.getElementById("us-appr-bar");
+  const cinBar  = document.getElementById("us-cin-bar");
+  if (apprBar) apprBar.style.width = apprPct + "%";
+  if (cinBar)  cinBar.style.width  = cinPct  + "%";
 }
 
 // ── Review tiles ──────────────────────────────────────────
@@ -746,11 +826,24 @@ function renderReview() {
 
   let html = "";
   order.forEach(k => {
-    html += `<div class="group-header" style="grid-column:1/-1">${esc(k)} <span class="group-count">${groups[k].length}</span></div>`;
-    html += groups[k].map(tileHtml).join("");
-    html += `<div class="tile-drawer group-drawer" id="tile-drawer-${esc(k).replace(/\s/g,'_')}"></div>`;
+    const collapsed = collapsedGroups.has(k);
+    const safeK = k.replace(/[^a-zA-Z0-9]/g, "_");
+    html += `<div class="group-header" style="grid-column:1/-1">
+      ${esc(k)} <span class="group-count">${groups[k].length}</span>
+      <button class="group-toggle" onclick="toggleGroup('${safeK}','${esc(k)}')">${collapsed ? "▶ Show" : "▼ Hide"}</button>
+    </div>`;
+    if (!collapsed) {
+      html += groups[k].map(tileHtml).join("");
+      html += `<div class="tile-drawer group-drawer" id="tile-drawer-${safeK}"></div>`;
+    }
   });
   grid.innerHTML = html;
+}
+
+function toggleGroup(safeK, origKey) {
+  if (collapsedGroups.has(origKey)) collapsedGroups.delete(origKey);
+  else { collapsedGroups.add(origKey); closeDrawer(); }
+  renderReview();
 }
 
 function tileHtml(r) {
@@ -919,8 +1012,15 @@ function renderAll() {
     return mQ && (!f || r.status === f);
   });
   rows.sort((a,b) => { const av=String(a[sortField]||"").toLowerCase(), bv=String(b[sortField]||"").toLowerCase(); return sortAsc?av.localeCompare(bv):bv.localeCompare(av); });
+
+  const total      = rows.length;
+  const totalPages = Math.max(1, Math.ceil(total / allPageSize));
+  if (allPage > totalPages) allPage = totalPages;
+  const start    = (allPage - 1) * allPageSize;
+  const pageRows = rows.slice(start, start + allPageSize);
+
   const tbody = document.getElementById("all-tbody");
-  tbody.innerHTML = rows.length ? rows.map(r => `<tr>
+  tbody.innerHTML = pageRows.length ? pageRows.map(r => `<tr>
     <td><strong>${esc(r.name)}</strong></td>
     <td>${esc(r.flat)}</td>
     <td style="color:var(--gray)">${esc(r.phone||"—")}</td>
@@ -932,6 +1032,21 @@ function renderAll() {
     <td style="color:var(--gray)">${esc(r.payUrl||"—")}</td>
     <td style="font-family:monospace;font-size:12px;letter-spacing:.5px">${esc(r.ticketId||"—")}</td>
   </tr>`).join("") : `<tr><td colspan="10" class="empty">No results</td></tr>`;
+
+  // Pagination bar
+  const bar = document.getElementById("all-pagination");
+  if (total <= allPageSize) { bar.innerHTML = ""; return; }
+  let btns = `<button class="pg-btn" onclick="allPage=1;renderAll()" ${allPage===1?"disabled":""}>«</button>`;
+  btns    += `<button class="pg-btn" onclick="allPage--;renderAll()" ${allPage===1?"disabled":""}>‹</button>`;
+  const lo = Math.max(1, allPage-2), hi = Math.min(totalPages, allPage+2);
+  if (lo > 1) btns += `<span style="padding:0 4px;color:var(--gray)">…</span>`;
+  for (let p = lo; p <= hi; p++)
+    btns += `<button class="pg-btn${p===allPage?" active":""}" onclick="allPage=${p};renderAll()">${p}</button>`;
+  if (hi < totalPages) btns += `<span style="padding:0 4px;color:var(--gray)">…</span>`;
+  btns += `<button class="pg-btn" onclick="allPage++;renderAll()" ${allPage===totalPages?"disabled":""}>›</button>`;
+  btns += `<button class="pg-btn" onclick="allPage=${totalPages};renderAll()" ${allPage===totalPages?"disabled":""}>»</button>`;
+  btns += `<span class="pg-info">${start+1}–${Math.min(start+allPageSize,total)} of ${total}</span>`;
+  bar.innerHTML = btns;
 }
 
 function sort(f) { sortAsc = sortField===f ? !sortAsc : true; sortField=f; renderAll(); }
