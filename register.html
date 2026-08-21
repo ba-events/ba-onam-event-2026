@@ -23,7 +23,7 @@
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #eef2ff; background-image: radial-gradient(ellipse at 15% 0%, rgba(139,92,246,.10) 0%, transparent 55%), radial-gradient(ellipse at 85% 100%, rgba(16,185,129,.07) 0%, transparent 55%); background-attachment: fixed; color: #0f172a; min-height: 100vh; }
 
 /* Hero banner */
-.hero { position: relative; color: #fff; text-align: center; overflow: hidden; height: 280px; }
+.hero { position: relative; color: #fff; text-align: center; overflow: hidden; height: 320px; }
 .hero-scroller { position: absolute; inset: 0; }
 .hero-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s ease; overflow: hidden; }
 .hero-slide.active { opacity: 1; }
@@ -33,7 +33,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 .hero-slide:nth-child(odd).active  img { animation: hero-zoom-in  8s ease-in-out forwards; }
 .hero-slide:nth-child(even).active img { animation: hero-zoom-out 8s ease-in-out forwards; }
 .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(20,15,60,.4) 0%, rgba(20,15,60,.78) 100%); }
-.hero-content { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+.hero-content { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px 20px 96px; }
 .hero-flowers { font-size: 26px; letter-spacing: 6px; margin-bottom: 6px; filter: drop-shadow(0 2px 6px rgba(0,0,0,.5)); }
 .hero-event-title { font-size: 46px; font-weight: 900; line-height: 1.05; white-space: nowrap; letter-spacing: -1px; text-shadow: 0 3px 16px rgba(0,0,0,.6); }
 .hero-event-title .yr { color: #fff; }
@@ -48,16 +48,25 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 .hero-dot.active { background: #fff; transform: scale(1.3); }
 
 /* Highlights */
-.highlights { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 4px; }
-.highlight { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 10px 18px; text-align: center; width: 165px; display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow); transition: transform .15s, box-shadow .15s; cursor: default; }
-.highlight:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-.highlight .hi { font-size: 22px; flex-shrink: 0; }
-.highlight .htext { text-align: left; }
-.highlight .ht { font-size: 12px; font-weight: 700; color: #1e1b4b; }
-.highlight .hs { font-size: 11px; color: var(--gray); margin-top: 2px; line-height: 1.3; }
+.hi-intro { text-align: center; margin-bottom: 14px; }
+.hi-q { font-size: 18px; font-weight: 900; color: #1e1b4b; line-height: 1.3; }
+.hi-qsub { font-size: 11px; color: var(--gray); margin-top: 4px; }
+.highlights { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.highlight { background: #fff; border: 1.5px solid var(--border-hard); border-radius: 12px; padding: 10px 8px 8px; width: 128px; display: flex; flex-direction: column; align-items: center; gap: 4px; box-shadow: var(--shadow-sm); transition: transform .15s, box-shadow .15s, border-color .15s; cursor: pointer; user-select: none; text-align: center; }
+.highlight:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: #c7d2fe; }
+.highlight.liked { border-color: #f9a8d4; background: #fff1f7; box-shadow: var(--shadow), 0 0 0 2px rgba(236,72,153,.1); }
+.highlight .hi { font-size: 22px; line-height: 1; }
+.highlight .htext { text-align: center; flex: 1; }
+.highlight .ht { font-size: 11px; font-weight: 700; color: #1e1b4b; }
+.highlight .hs { font-size: 10px; color: var(--gray); margin-top: 2px; line-height: 1.3; }
+.like-btn { display: flex; align-items: center; justify-content: center; gap: 3px; margin-top: auto; padding: 3px 10px; border-radius: 20px; background: #f1f5f9; font-size: 11px; font-weight: 700; color: #94a3b8; transition: all .2s; min-width: 40px; }
+.highlight.liked .like-btn { background: #fce7f3; color: #be185d; }
+.like-heart { font-size: 13px; display: inline-block; transition: transform .15s; }
+.highlight:active .like-heart { transform: scale(1.5); }
+@keyframes heart-pop { 0% { transform: scale(0) translateY(0); opacity: 1; } 50% { transform: scale(1.6) translateY(-8px); opacity: 1; } 100% { transform: scale(1) translateY(-24px); opacity: 0; } }
 
 /* Home button */
-.home-btn { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,.18); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,.35); color: #fff; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 20px; cursor: pointer; position: absolute; top: 12px; left: 12px; z-index: 10; font-family: inherit; transition: background .15s; }
+.home-btn { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,.18); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,.35); color: #fff; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 20px; cursor: pointer; position: absolute; bottom: 12px; left: 12px; z-index: 10; font-family: inherit; transition: background .15s; }
 .home-btn:hover { background: rgba(255,255,255,.3); }
 .steps { display: flex; justify-content: center; gap: 0; background: rgba(255,255,255,.7); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); }
 .step { flex: 1; max-width: 160px; padding: 12px 4px; text-align: center; font-size: 12px; font-weight: 600; color: var(--gray); position: relative; transition: color .2s; }
@@ -137,6 +146,61 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(60px); background: #1e293b; color: #fff; padding: 10px 22px; border-radius: 8px; font-size: 13px; font-weight: 600; opacity: 0; transition: all .25s; z-index: 999; pointer-events: none; white-space: nowrap; }
 #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+/* Countdown — glass overlay inside hero */
+.countdown-wrap { position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,.32); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,.22); border-radius: 14px; padding: 7px 20px 9px; z-index: 5; white-space: nowrap; }
+.countdown-title { color: rgba(255,255,255,.82); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
+.countdown-units { display: flex; align-items: flex-start; justify-content: center; gap: 4px; }
+.cd-unit { text-align: center; min-width: 48px; }
+.cd-num { font-size: 26px; font-weight: 900; color: #fff; line-height: 1; font-variant-numeric: tabular-nums; }
+.cd-label { font-size: 8px; font-weight: 700; color: rgba(255,255,255,.65); letter-spacing: 1px; text-transform: uppercase; margin-top: 3px; }
+.cd-sep { font-size: 20px; font-weight: 900; color: rgba(255,255,255,.5); line-height: 1; padding-top: 3px; }
+
+/* Experience grid */
+.exp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
+.exp-item { cursor: pointer; }
+.exp-item input { display: none; }
+.exp-card { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 12px 6px 10px; border: 2px solid var(--border-hard); border-radius: 10px; background: #fff; font-size: 11px; font-weight: 600; color: #374151; text-align: center; transition: all .15s; box-shadow: var(--shadow-sm); line-height: 1.3; }
+.exp-card .ei { font-size: 24px; }
+.exp-item input:checked + .exp-card { border-color: var(--brand); background: var(--brand-bg); color: var(--brand); box-shadow: 0 0 0 3px rgba(99,102,241,.12); transform: translateY(-1px); }
+.exp-card:hover { border-color: #a5b4fc; transform: translateY(-1px); box-shadow: var(--shadow); }
+
+/* Family wall */
+.wall-count { font-size: 14px; font-weight: 700; color: #1e1b4b; margin-bottom: 14px; text-align: center; line-height: 1.5; }
+.wall-mosaic { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px; max-height: 280px; overflow-y: auto; padding-right: 4px; }
+.wall-tile { border-radius: 10px; padding: 10px 6px; text-align: center; color: #fff; display: flex; flex-direction: column; align-items: center; gap: 3px; min-height: 76px; justify-content: center; }
+.wall-tile .wt-flat { font-size: 11px; font-weight: 800; }
+.wall-tile .wt-name { font-size: 9px; opacity: .85; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 76px; }
+
+/* Kerala decorations */
+.kerala-deco { position: fixed; pointer-events: none; z-index: 0; display: none; }
+#deco-leaf-l { top: 35%; left: -8px; font-size: 52px; transform-origin: bottom left; animation: leaf-sway 5s ease-in-out infinite; opacity: .28; }
+#deco-leaf-r { top: 50%; right: -8px; font-size: 52px; transform-origin: bottom right; animation: leaf-sway 5s ease-in-out infinite reverse; opacity: .28; }
+#deco-lamp   { bottom: 100px; right: 14px; font-size: 34px; animation: flame-flicker 2.2s ease-in-out infinite; opacity: .5; }
+#deco-boat   { bottom: 8px; font-size: 30px; animation: boat-float 28s linear infinite; opacity: .38; }
+@keyframes leaf-sway     { 0%,100% { transform: rotate(-6deg); } 50% { transform: rotate(10deg); } }
+@keyframes flame-flicker { 0%,100% { transform: scale(1)    translateY(0);    opacity: .5;  }
+                            35%     { transform: scale(1.09) translateY(-3px); opacity: .68; }
+                            65%     { transform: scale(.93)  translateY(1px);  opacity: .42; } }
+@keyframes boat-float    { from { left: -80px; } to { left: 110%; } }
+
+/* Floating flowers */
+.float-flower { position: fixed; pointer-events: none; z-index: 1; animation: flower-rise linear forwards; opacity: 0; bottom: 0; }
+@keyframes flower-rise { 0% { transform: translateY(0) rotate(0deg); opacity: .65; }
+                         100% { transform: translateY(-105vh) rotate(400deg); opacity: 0; } }
+
+/* Confetti */
+.confetti-piece { position: fixed; top: -12px; width: 9px; height: 9px; pointer-events: none; z-index: 9999; animation: confetti-fall linear forwards; border-radius: 2px; }
+@keyframes confetti-fall { 0%   { transform: translateY(0) rotate(0deg);   opacity: 1; }
+                           100% { transform: translateY(110vh) rotate(800deg); opacity: 0; } }
+
+@media (max-width: 480px) {
+  .cd-num { font-size: 24px; }
+  .cd-sep { font-size: 22px; }
+  .exp-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .wall-mosaic { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); }
+  #deco-leaf-l, #deco-leaf-r { display: none; }
+}
+
 .panel { display: none; }
 .panel.active { display: block; }
 
@@ -146,6 +210,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
   .hero { height: 240px; }
   .hero-event-title { font-size: 32px; }
   .hero-ponnonam { font-size: 13px; }
+  .highlights { justify-content: center; }
+  .highlight { width: 106px; padding: 8px 6px 7px; }
+  .highlight .hi { font-size: 20px; }
   .wrap { padding: 16px 12px 60px; }
   .card { padding: 18px 16px; }
   .highlight { width: 140px; padding: 8px 12px; }
@@ -185,6 +252,16 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
       <a class="chip" href="https://maps.app.goo.gl/U1HyHkS6fodXsV8X9" target="_blank" style="text-decoration:none;background:rgba(255,255,255,.3)">🗺 View on Google Maps</a>
     </div>
   </div>
+  <div class="countdown-wrap">
+    <div class="countdown-title">🌼 Ponnonam 2026 begins in...</div>
+    <div class="countdown-units">
+      <div class="cd-unit"><div class="cd-num" id="cd-days">--</div><div class="cd-label">Days</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-unit"><div class="cd-num" id="cd-hours">--</div><div class="cd-label">Hours</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-unit"><div class="cd-num" id="cd-mins">--</div><div class="cd-label">Minutes</div></div>
+    </div>
+  </div>
   <div class="hero-dots">
     <div class="hero-dot active" onclick="heroGoTo(0)"></div>
     <div class="hero-dot" onclick="heroGoTo(1)"></div>
@@ -195,23 +272,27 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 </div>
 
 <!-- Program highlights -->
-<div style="background:rgba(255,255,255,.7);backdrop-filter:blur(8px);border-bottom:1px solid var(--border-hard);padding:16px 20px">
-  <p style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;text-align:center;margin-bottom:12px">Program Highlights</p>
+<div style="background:rgba(255,255,255,.7);backdrop-filter:blur(8px);border-bottom:1px solid var(--border-hard);padding:16px 20px;text-align:center">
+  <div class="hi-intro">
+    <div class="hi-q">What awaits you?</div>
+    <div class="hi-qsub">Tap the tiles to show interest</div>
+  </div>
   <div class="highlights">
-    <div class="highlight"><div class="hi">🌸</div><div class="htext"><div class="ht">Pookalam</div><div class="hs">Traditional floral design</div></div></div>
-    <div class="highlight"><div class="hi">🍛</div><div class="htext"><div class="ht">Onam Sadhya</div><div class="hs">Grand feast on banana leaf</div></div></div>
-    <div class="highlight"><div class="hi">💃</div><div class="htext"><div class="ht">Cultural Programs</div><div class="hs">Dance & performances</div></div></div>
-    <div class="highlight"><div class="hi">🎮</div><div class="htext"><div class="ht">Fun & Games</div><div class="hs">Activities for all ages</div></div></div>
-    <div class="highlight"><div class="hi">👘</div><div class="htext"><div class="ht">Traditional Attire</div><div class="hs">Come in your best Kerala wear</div></div></div>
-    <div class="highlight"><div class="hi">📸</div><div class="htext"><div class="ht">Photo Moments</div><div class="hs">Memories to cherish</div></div></div>
+    <div class="highlight" data-tile="pookalam" onclick="toggleLike(this)"><div class="hi">🌸</div><div class="htext"><div class="ht">Pookalam</div><div class="hs">Traditional floral design</div></div><div class="like-btn"><span class="like-heart">♥</span><span class="like-count"></span></div></div>
+    <div class="highlight" data-tile="sadhya"   onclick="toggleLike(this)"><div class="hi">🍛</div><div class="htext"><div class="ht">Onam Sadhya</div><div class="hs">Grand feast on banana leaf</div></div><div class="like-btn"><span class="like-heart">♥</span><span class="like-count"></span></div></div>
+    <div class="highlight" data-tile="cultural" onclick="toggleLike(this)"><div class="hi">💃</div><div class="htext"><div class="ht">Cultural Programs</div><div class="hs">Dance &amp; performances</div></div><div class="like-btn"><span class="like-heart">♥</span><span class="like-count"></span></div></div>
+    <div class="highlight" data-tile="games"    onclick="toggleLike(this)"><div class="hi">🎮</div><div class="htext"><div class="ht">Fun &amp; Games</div><div class="hs">Activities for all ages</div></div><div class="like-btn"><span class="like-heart">♥</span><span class="like-count"></span></div></div>
+    <div class="highlight" data-tile="attire"   onclick="toggleLike(this)"><div class="hi">👘</div><div class="htext"><div class="ht">Traditional Attire</div><div class="hs">Come in your best ethnic wear</div></div><div class="like-btn"><span class="like-heart">♥</span><span class="like-count"></span></div></div>
+    <div class="highlight" data-tile="photos"   onclick="toggleLike(this)"><div class="hi">📸</div><div class="htext"><div class="ht">Photo Moments</div><div class="hs">Memories to cherish</div></div><div class="like-btn"><span class="like-heart">♥</span><span class="like-count"></span></div></div>
+    <div class="highlight" data-tile="tugofwar" onclick="toggleLike(this)"><div class="hi">🪢</div><div class="htext"><div class="ht">Tug of War</div><div class="hs">Team challenge fun</div></div><div class="like-btn"><span class="like-heart">♥</span><span class="like-count"></span></div></div>
   </div>
 </div>
 
 <!-- Steps -->
 <div class="steps">
-  <div class="step active" id="step1"><div class="snum">1</div>Details</div>
-  <div class="step"        id="step2"><div class="snum">2</div>Payment</div>
-  <div class="step"        id="step3"><div class="snum">3</div>Done!</div>
+  <div class="step active" id="step1"><div class="snum">①</div>Family Details</div>
+  <div class="step"        id="step2"><div class="snum">②</div>Preferences</div>
+  <div class="step"        id="step3"><div class="snum">③</div>Confirmation</div>
 </div>
 
 <div class="wrap">
@@ -263,11 +344,24 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
       </div>
     </div>
 
-    <button class="btn btn-primary" onclick="goToPayment()">Continue to Payment →</button>
+    <button class="btn btn-primary" onclick="goToPayment()">Continue →</button>
   </div>
 
-  <!-- PANEL 2: Payment -->
+  <!-- PANEL 2: Preferences + Payment -->
   <div class="panel" id="panel2">
+    <div class="card">
+      <h2>🌸 Choose your Onam Experience</h2>
+      <p style="font-size:13px;color:var(--gray);margin-bottom:2px">Select activities you'd like to join <span style="font-weight:400">(optional)</span></p>
+      <div class="exp-grid">
+        <label class="exp-item"><input type="checkbox" name="exp" value="pookalam"/><div class="exp-card"><span class="ei">🌸</span>Pookalam Team</div></label>
+        <label class="exp-item"><input type="checkbox" name="exp" value="cultural"/><div class="exp-card"><span class="ei">🎭</span>Cultural Program</div></label>
+        <label class="exp-item"><input type="checkbox" name="exp" value="games"/><div class="exp-card"><span class="ei">🏃</span>Games &amp; Activities</div></label>
+        <label class="exp-item"><input type="checkbox" name="exp" value="photography"/><div class="exp-card"><span class="ei">📸</span>Photography</div></label>
+        <label class="exp-item"><input type="checkbox" name="exp" value="sadya"/><div class="exp-card"><span class="ei">🍛</span>Sadya Support</div></label>
+        <label class="exp-item"><input type="checkbox" name="exp" value="volunteer"/><div class="exp-card"><span class="ei">🎤</span>Volunteer</div></label>
+      </div>
+    </div>
+
     <div class="card">
       <h2>💰 Pay via UPI</h2>
       <div class="upi-box">
@@ -310,7 +404,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
     <div class="card">
       <div class="confirm-icon">🎉</div>
       <div class="confirm-name" id="conf-name"></div>
-      <div class="confirm-sub">Registration submitted! We'll verify your payment and send your QR ticket on WhatsApp.</div>
+      <div class="confirm-sub">Congrats! Your family is officially part of BA Ponnonam 2026. 🎉<br><span style="font-size:12px;color:var(--gray)">We'll verify your payment and send your QR ticket on WhatsApp.</span></div>
       <div class="confirm-details">
         <div class="row"><span class="k">Unit</span><span class="v" id="conf-flat"></span></div>
         <div class="row"><span class="k">Adults</span><span class="v" id="conf-adults"></span></div>
@@ -338,7 +432,21 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
     </div>
   </div>
 
+    <div class="card">
+      <h2>👨‍👩‍👧‍👦 Ponnonam Family Wall</h2>
+      <div id="wall-count" class="wall-count">Loading families...</div>
+      <div id="family-wall" class="wall-mosaic"></div>
+    </div>
+
+  </div>
+
 </div>
+
+<!-- Kerala decorations -->
+<div id="deco-leaf-l" class="kerala-deco">🍃</div>
+<div id="deco-leaf-r" class="kerala-deco">🍃</div>
+<div id="deco-lamp"   class="kerala-deco">🪔</div>
+<div id="deco-boat"   class="kerala-deco">🛶</div>
 
 <div id="toast"></div>
 
@@ -355,6 +463,12 @@ let formData = {};
 addEventListener("DOMContentLoaded", () => {
   calcAmount();
   setupCalendarLinks();
+  updateCountdown();
+  setInterval(updateCountdown, 30000);
+  initKeralaDeco();
+  loadFamilyWall();
+  initLikedState();
+  loadLikeCounts();
   // Hero image scroller
   const slides = document.querySelectorAll('.hero-slide');
   const dots   = document.querySelectorAll('.hero-dot');
@@ -497,6 +611,8 @@ function handleSuccess(data) {
   }
 
   showPanel(3);
+  launchConfetti();
+  setTimeout(loadFamilyWall, 600);
 }
 
 // ── Calendar ──────────────────────────────────────────────
@@ -557,6 +673,145 @@ function jsonp(params) {
     };
     document.head.appendChild(script);
   });
+}
+
+// ── Countdown ─────────────────────────────────────────────
+function updateCountdown() {
+  const event = new Date("2026-09-26T09:00:00+05:30");
+  const now   = new Date();
+  const diff  = event - now;
+  if (diff <= 0) {
+    document.querySelector(".countdown-wrap").innerHTML =
+      '<div class="countdown-title" style="font-size:18px;color:#fbbf24">🌸 Ponnonam 2026 is Today! 🌸</div>';
+    return;
+  }
+  const days  = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  const mins  = Math.floor((diff % 3600000)  / 60000);
+  const pad   = n => String(n).padStart(2, "0");
+  document.getElementById("cd-days").textContent  = days;
+  document.getElementById("cd-hours").textContent = pad(hours);
+  document.getElementById("cd-mins").textContent  = pad(mins);
+}
+
+// ── Kerala decorations ────────────────────────────────────
+function initKeralaDeco() {
+  ["deco-leaf-l","deco-leaf-r","deco-lamp","deco-boat"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = "block";
+  });
+  const flowers = ["🌸","🌼","🌺","🪷"];
+  function spawnFlower() {
+    const el = document.createElement("div");
+    el.className = "float-flower";
+    el.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+    el.style.left = (5 + Math.random() * 90) + "vw";
+    el.style.fontSize = (13 + Math.random() * 10) + "px";
+    const dur = 10 + Math.random() * 7;
+    el.style.animationDuration = dur + "s";
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), dur * 1000);
+  }
+  spawnFlower();
+  setInterval(spawnFlower, 5000);
+}
+
+// ── Confetti ──────────────────────────────────────────────
+function launchConfetti() {
+  const colors = ["#4f46e5","#f97316","#fbbf24","#16a34a","#ec4899","#06b6d4","#a855f7"];
+  for (let i = 0; i < 90; i++) {
+    const el = document.createElement("div");
+    el.className = "confetti-piece";
+    el.style.left = (Math.random() * 100) + "vw";
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.borderRadius = Math.random() > 0.5 ? "50%" : "2px";
+    el.style.width  = (6 + Math.random() * 6) + "px";
+    el.style.height = (6 + Math.random() * 6) + "px";
+    el.style.animationDuration  = (1.4 + Math.random() * 2.2) + "s";
+    el.style.animationDelay     = (Math.random() * 0.9) + "s";
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 4500);
+  }
+}
+
+// ── Family Wall ───────────────────────────────────────────
+const WALL_COLORS = ["#4f46e5","#7c3aed","#db2777","#ea580c","#16a34a","#0891b2","#9333ea","#dc2626","#d97706","#059669","#0284c7","#be185d"];
+function loadFamilyWall() {
+  const wallEl  = document.getElementById("family-wall");
+  const countEl = document.getElementById("wall-count");
+  if (!wallEl) return;
+  jsonp({ action: "list" }).then(data => {
+    if (!data || !data.rows) { if (countEl) countEl.textContent = ""; return; }
+    const active = data.rows.filter(r => r.status !== "REJECTED");
+    if (countEl) countEl.innerHTML = "👨‍👩‍👧‍👦 <strong>" + active.length + " Families</strong> are celebrating Ponnonam with us!";
+    wallEl.innerHTML = active.map((r, i) => {
+      const color = WALL_COLORS[i % WALL_COLORS.length];
+      const first = r.name ? r.name.split(" ")[0] : "Family";
+      return '<div class="wall-tile" style="background:' + color + '">' +
+        '<div style="font-size:20px">🏠</div>' +
+        '<div class="wt-flat">' + r.flat + '</div>' +
+        '<div class="wt-name">' + first + ' Family</div>' +
+        '</div>';
+    }).join("");
+  });
+}
+
+// ── Highlight Likes ───────────────────────────────────────
+function initLikedState() {
+  const liked = new Set(JSON.parse(localStorage.getItem("hi_liked") || "[]"));
+  document.querySelectorAll(".highlight[data-tile]").forEach(el => {
+    if (liked.has(el.dataset.tile)) el.classList.add("liked");
+  });
+}
+
+function loadLikeCounts() {
+  const local = JSON.parse(localStorage.getItem("hi_likes") || "{}");
+  applyLikeCounts(local);
+  jsonp({ action: "getlikes" }).then(data => {
+    if (data && data.ok && data.counts) {
+      localStorage.setItem("hi_likes", JSON.stringify(data.counts));
+      applyLikeCounts(data.counts);
+    }
+  });
+}
+
+function applyLikeCounts(counts) {
+  document.querySelectorAll(".highlight[data-tile]").forEach(el => {
+    const n = counts[el.dataset.tile] || 0;
+    const countEl = el.querySelector(".like-count");
+    if (countEl) countEl.textContent = n > 0 ? n : "";
+  });
+}
+
+function toggleLike(el) {
+  const key    = el.dataset.tile;
+  const liked  = new Set(JSON.parse(localStorage.getItem("hi_liked") || "[]"));
+  const counts = JSON.parse(localStorage.getItem("hi_likes") || "{}");
+  if (liked.has(key)) {
+    liked.delete(key);
+    counts[key] = Math.max(0, (counts[key] || 1) - 1);
+    el.classList.remove("liked");
+  } else {
+    liked.add(key);
+    counts[key] = (counts[key] || 0) + 1;
+    el.classList.add("liked");
+    heartBurst(el);
+    jsonp({ action: "like", tile: key });
+  }
+  localStorage.setItem("hi_liked",  JSON.stringify([...liked]));
+  localStorage.setItem("hi_likes",  JSON.stringify(counts));
+  applyLikeCounts(counts);
+}
+
+function heartBurst(el) {
+  const r = el.getBoundingClientRect();
+  const b = document.createElement("div");
+  b.textContent = "❤️";
+  b.style.cssText = "position:fixed;left:" + (r.left + r.width/2 - 12) + "px;top:" +
+    (r.top + r.height/2 - 12) + "px;font-size:22px;pointer-events:none;z-index:9999;" +
+    "animation:heart-pop .55s ease-out forwards";
+  document.body.appendChild(b);
+  setTimeout(() => b.remove(), 700);
 }
 
 function maskEmail(email) {
