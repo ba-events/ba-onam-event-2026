@@ -23,7 +23,7 @@
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #eef2ff; background-image: radial-gradient(ellipse at 15% 0%, rgba(139,92,246,.10) 0%, transparent 55%), radial-gradient(ellipse at 85% 100%, rgba(16,185,129,.07) 0%, transparent 55%); background-attachment: fixed; color: #0f172a; min-height: 100vh; }
 
 /* Hero banner */
-.hero { position: relative; color: #fff; text-align: center; overflow: hidden; height: 320px; }
+.hero { position: relative; color: #fff; text-align: center; overflow: hidden; height: 280px; }
 .hero-scroller { position: absolute; inset: 0; }
 .hero-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s ease; overflow: hidden; }
 .hero-slide.active { opacity: 1; }
@@ -33,7 +33,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 .hero-slide:nth-child(odd).active  img { animation: hero-zoom-in  8s ease-in-out forwards; }
 .hero-slide:nth-child(even).active img { animation: hero-zoom-out 8s ease-in-out forwards; }
 .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(20,15,60,.4) 0%, rgba(20,15,60,.78) 100%); }
-.hero-content { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px 20px 96px; }
+.hero-content { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
 .hero-flowers { font-size: 26px; letter-spacing: 6px; margin-bottom: 6px; filter: drop-shadow(0 2px 6px rgba(0,0,0,.5)); }
 .hero-event-title { font-size: 46px; font-weight: 900; line-height: 1.05; white-space: nowrap; letter-spacing: -1px; text-shadow: 0 3px 16px rgba(0,0,0,.6); }
 .hero-event-title .yr { color: #fff; }
@@ -50,7 +50,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 /* Highlights */
 .hi-intro { text-align: center; margin-bottom: 14px; }
 .hi-q { font-size: 18px; font-weight: 900; color: #1e1b4b; line-height: 1.3; }
-.hi-qsub { font-size: 11px; color: var(--gray); margin-top: 4px; }
+.hi-qsub { font-size: 11px; color: var(--brand); font-weight: 600; margin-top: 4px; }
 .highlights { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
 .highlight { background: #fff; border: 1.5px solid var(--border-hard); border-radius: 12px; padding: 10px 8px 8px; width: 128px; display: flex; flex-direction: column; align-items: center; gap: 4px; box-shadow: var(--shadow-sm); transition: transform .15s, box-shadow .15s, border-color .15s; cursor: pointer; user-select: none; text-align: center; }
 .highlight:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: #c7d2fe; }
@@ -146,14 +146,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(60px); background: #1e293b; color: #fff; padding: 10px 22px; border-radius: 8px; font-size: 13px; font-weight: 600; opacity: 0; transition: all .25s; z-index: 999; pointer-events: none; white-space: nowrap; }
 #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* Countdown — glass overlay inside hero */
-.countdown-wrap { position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,.32); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,.22); border-radius: 14px; padding: 7px 20px 9px; z-index: 5; white-space: nowrap; }
-.countdown-title { color: rgba(255,255,255,.82); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
-.countdown-units { display: flex; align-items: flex-start; justify-content: center; gap: 4px; }
-.cd-unit { text-align: center; min-width: 48px; }
-.cd-num { font-size: 26px; font-weight: 900; color: #fff; line-height: 1; font-variant-numeric: tabular-nums; }
-.cd-label { font-size: 8px; font-weight: 700; color: rgba(255,255,255,.65); letter-spacing: 1px; text-transform: uppercase; margin-top: 3px; }
-.cd-sep { font-size: 20px; font-weight: 900; color: rgba(255,255,255,.5); line-height: 1; padding-top: 3px; }
+/* Countdown — compact horizontal pill in highlights section */
+.countdown-wrap { display: flex; align-items: center; justify-content: center; gap: 4px; background: var(--brand-bg); border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px; margin: 8px auto 4px; }
+.countdown-title { font-size: 11px; font-weight: 700; color: var(--gray); margin-bottom: 0; margin-right: 6px; white-space: nowrap; }
+.countdown-units { display: flex; align-items: center; gap: 3px; }
+.cd-unit { text-align: center; min-width: unset; }
+.cd-num { font-size: 17px; font-weight: 900; color: var(--brand); line-height: 1; font-variant-numeric: tabular-nums; }
+.cd-label { font-size: 8px; font-weight: 700; color: var(--gray); letter-spacing: 1px; text-transform: uppercase; margin-top: 1px; }
+.cd-sep { font-size: 14px; font-weight: 900; color: var(--brand); line-height: 1; opacity: .45; padding-top: 0; }
 
 /* Experience grid */
 .exp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
@@ -194,8 +194,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
                            100% { transform: translateY(110vh) rotate(800deg); opacity: 0; } }
 
 @media (max-width: 480px) {
-  .cd-num { font-size: 24px; }
-  .cd-sep { font-size: 22px; }
   .exp-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .wall-mosaic { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); }
   #deco-leaf-l, #deco-leaf-r { display: none; }
@@ -252,16 +250,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
       <a class="chip" href="https://maps.app.goo.gl/U1HyHkS6fodXsV8X9" target="_blank" style="text-decoration:none;background:rgba(255,255,255,.3)">🗺 View on Google Maps</a>
     </div>
   </div>
-  <div class="countdown-wrap">
-    <div class="countdown-title">🌼 Ponnonam 2026 begins in...</div>
-    <div class="countdown-units">
-      <div class="cd-unit"><div class="cd-num" id="cd-days">--</div><div class="cd-label">Days</div></div>
-      <div class="cd-sep">:</div>
-      <div class="cd-unit"><div class="cd-num" id="cd-hours">--</div><div class="cd-label">Hours</div></div>
-      <div class="cd-sep">:</div>
-      <div class="cd-unit"><div class="cd-num" id="cd-mins">--</div><div class="cd-label">Minutes</div></div>
-    </div>
-  </div>
   <div class="hero-dots">
     <div class="hero-dot active" onclick="heroGoTo(0)"></div>
     <div class="hero-dot" onclick="heroGoTo(1)"></div>
@@ -275,6 +263,16 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 <div style="background:rgba(255,255,255,.7);backdrop-filter:blur(8px);border-bottom:1px solid var(--border-hard);padding:16px 20px;text-align:center">
   <div class="hi-intro">
     <div class="hi-q">What awaits you?</div>
+    <div class="countdown-wrap">
+      <div class="countdown-title">🌼 begins in</div>
+      <div class="countdown-units">
+        <div class="cd-unit"><div class="cd-num" id="cd-days">--</div><div class="cd-label">Days</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><div class="cd-num" id="cd-hours">--</div><div class="cd-label">Hrs</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><div class="cd-num" id="cd-mins">--</div><div class="cd-label">Mins</div></div>
+      </div>
+    </div>
     <div class="hi-qsub">Tap the tiles to show interest</div>
   </div>
   <div class="highlights">
