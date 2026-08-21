@@ -32,7 +32,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 @keyframes hero-zoom-out { from { transform: scale(1.08); } to { transform: scale(1.0);  } }
 .hero-slide:nth-child(odd).active  img { animation: hero-zoom-in  8s ease-in-out forwards; }
 .hero-slide:nth-child(even).active img { animation: hero-zoom-out 8s ease-in-out forwards; }
-.hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(20,15,60,.4) 0%, rgba(20,15,60,.78) 100%); }
+.hero-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(8,45,28,.82) 0%, transparent 28%), linear-gradient(to left, rgba(8,45,28,.82) 0%, transparent 28%), linear-gradient(to bottom, rgba(8,45,28,.55) 0%, transparent 38%), linear-gradient(to top, rgba(8,45,28,.90) 0%, transparent 52%); }
+.hero::before, .hero::after { content: ''; position: absolute; left: 0; right: 0; height: 5px; z-index: 4; background: linear-gradient(90deg, #164f3a 0%, #21654a 15%, #d5a83b 35%, #e8c05a 50%, #d5a83b 65%, #21654a 85%, #164f3a 100%); }
+.hero::before { top: 0; }
+.hero::after  { bottom: 0; }
 .hero-content { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
 .hero-flowers { font-size: 26px; letter-spacing: 6px; margin-bottom: 6px; filter: drop-shadow(0 2px 6px rgba(0,0,0,.5)); }
 .hero-event-title { font-size: 46px; font-weight: 900; line-height: 1.05; white-space: nowrap; letter-spacing: -1px; text-shadow: 0 3px 16px rgba(0,0,0,.6); }
