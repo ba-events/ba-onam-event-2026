@@ -181,7 +181,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 .mt-tf .mt-tv { font-size: 14px; font-weight: 700; color: #fff; }
 .mt-tf .mt-tv.gld { color: #e8c05a; }
 .mt-tf .mt-tv.grn { color: #86efac; }
-.mt-qr { text-align: center; padding: 14px 0 4px; }
+.mt-flat-wrap { position: relative; }
+.mt-flat-dd { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #fff; border: 1px solid #dfe5dc; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.12); max-height: 180px; overflow-y: auto; z-index: 2000; display: none; }
+.mt-flat-dd.open { display: block; }
+.mt-flat-opt { padding: 11px 14px; font-size: 14px; cursor: pointer; font-weight: 600; color: var(--ink); border-bottom: 1px solid #f1f5f0; }
+.mt-flat-opt:last-child { border: none; }
+.mt-flat-opt:hover, .mt-flat-opt.focused { background: #f0f8f2; color: #164f3a; }
 .mt-qr img { border-radius: 10px; border: 3px solid #e8c05a; box-shadow: 0 4px 16px rgba(213,168,59,.25); } border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: sp .6s linear infinite; vertical-align: middle; margin-right: 6px; }
 @keyframes sp { to { transform: rotate(360deg); } }
 
@@ -510,8 +515,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
         </div>
         <div class="field" id="mt-f-flat" style="margin-bottom:18px">
           <label style="font-size:12px;font-weight:800;display:block;margin-bottom:6px">BA Villament # *</label>
-          <input id="mt-flat" type="text" list="mt-flats-list" placeholder="Search or type villament #" style="width:100%;padding:12px 14px;border:1px solid #dfe5dc;border-radius:10px;font-size:14px;font-family:inherit;outline:none;text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"/>
-          <datalist id="mt-flats-list"></datalist>
+          <div class="mt-flat-wrap">
+            <input id="mt-flat" type="text" placeholder="Search or type villament #" autocomplete="off"
+              style="width:100%;padding:12px 14px;border:1px solid #dfe5dc;border-radius:10px;font-size:14px;font-family:inherit;outline:none;text-transform:uppercase"
+              oninput="this.value=this.value.toUpperCase();filterFlatDd(this.value)"
+              onfocus="filterFlatDd(this.value)"
+              onblur="setTimeout(()=>closeFlatDd(),180)"/>
+            <div id="mt-flat-dd" class="mt-flat-dd"></div>
+          </div>
         </div>
         <button class="btn btn-primary" id="mt-submit-btn" onclick="lookupTicket()">&#128269; Find My Ticket</button>
       </div>
@@ -592,7 +603,7 @@ function normalizeFlat(raw) {
   if (!raw) return "";
   let s = String(raw).replace(/[\s​ ﻿]/g, "").toUpperCase();
   const prefixMatch = s.match(/^([A-Z]+)/);
-  const prefix = prefixMatch ? prefixMatch[1] : "B";
+  const prefix = prefixMatch ? prefixMatch[1][0] : "B";
   let rest = s.replace(/^[A-Z]+/, "");
   if (rest.includes("-")) {
     const parts = rest.split("-").map(p => p.replace(/\D/g,"")).filter(Boolean);
@@ -943,16 +954,36 @@ function openMyTicket() {
   document.getElementById("mt-phone").value = "";
   document.getElementById("mt-flat").value = "";
   setTimeout(() => document.getElementById("mt-phone").focus(), 120);
-  // Populate villament datalist from approved registrations
+  // Populate villament dropdown from approved registrations
   jsonp({ action: "getapprovedflats" }).then(data => {
     if (!data || !data.flats) return;
-    const dl = document.getElementById("mt-flats-list");
-    dl.innerHTML = data.flats.map(f => '<option value="' + f + '">').join("");
+    window._mtFlats = data.flats;
   });
 }
 
 function closeMyTicket() {
   document.getElementById("mt-overlay").classList.remove("open");
+}
+
+function filterFlatDd(q) {
+  const dd = document.getElementById("mt-flat-dd");
+  const all = window._mtFlats || [];
+  const filtered = q ? all.filter(f => f.includes(q.toUpperCase())) : all;
+  if (!filtered.length) { dd.classList.remove("open"); return; }
+  dd.innerHTML = filtered.slice(0, 40).map(f =>
+    '<div class="mt-flat-opt" onmousedown="pickFlat(\'' + f + '\')">' + f + '</div>'
+  ).join("");
+  dd.classList.add("open");
+}
+
+function closeFlatDd() {
+  const dd = document.getElementById("mt-flat-dd");
+  if (dd) dd.classList.remove("open");
+}
+
+function pickFlat(val) {
+  document.getElementById("mt-flat").value = val;
+  closeFlatDd();
 }
 
 async function lookupTicket() {
