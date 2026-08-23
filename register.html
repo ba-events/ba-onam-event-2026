@@ -151,8 +151,38 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 .tf .tv.grn { color: #86efac; }
 .ticket-foot { padding: 10px 24px 16px; text-align: center; font-size: 11px; color: rgba(255,255,255,.35); border-top: 1px dashed rgba(255,255,255,.1); }
 .conf-note { font-size: 12px; color: var(--gray); text-align: center; margin: 10px 0 0; line-height: 1.6; }
+.happy-onam { text-align: center; padding: 14px 0 4px; overflow: hidden; }
+.happy-onam .ho-text { display: inline-block; font-size: 20px; font-weight: 900; color: var(--green); letter-spacing: .04em; animation: hoflash 1.4s ease-in-out infinite alternate; }
+@keyframes hoflash { from { opacity: .4; transform: scale(.97); } to { opacity: 1; transform: scale(1.04); } }
 
-.spin { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: sp .6s linear infinite; vertical-align: middle; margin-right: 6px; }
+/* My Ticket modal */
+.mt-fab { position: fixed; bottom: 28px; right: 20px; z-index: 900; background: linear-gradient(135deg,#164f3a,#21654a); color: #fff; border: none; border-radius: 999px; padding: 12px 20px; font-size: 13px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 18px rgba(22,79,58,.45); font-family: inherit; display: flex; align-items: center; gap: 7px; transition: transform .15s, box-shadow .15s; }
+.mt-fab:hover { transform: translateY(-2px); box-shadow: 0 6px 26px rgba(22,79,58,.55); }
+.mt-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(4px); }
+.mt-overlay.open { display: flex; }
+.mt-modal { background: #fff; border-radius: 20px; width: 100%; max-width: 400px; overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,.3); animation: mtslide .25s cubic-bezier(.34,1.56,.64,1); }
+@keyframes mtslide { from { transform: scale(.88) translateY(20px); opacity: 0; } to { transform: none; opacity: 1; } }
+.mt-head { background: linear-gradient(135deg,#164f3a,#21654a); color: #fff; padding: 20px 22px 16px; display: flex; align-items: center; justify-content: space-between; }
+.mt-head h3 { margin: 0; font-size: 16px; font-weight: 800; }
+.mt-close { background: none; border: none; color: rgba(255,255,255,.7); font-size: 22px; cursor: pointer; line-height: 1; padding: 0; }
+.mt-close:hover { color: #fff; }
+.mt-body { padding: 22px; }
+.mt-result { display: none; }
+.mt-result.show { display: block; }
+.mt-err { background: #fff1f1; border: 1px solid #fca5a5; border-radius: 10px; padding: 14px; font-size: 13px; color: #b91c1c; text-align: center; margin-bottom: 14px; }
+.mt-pending { background: #fef9c3; border: 1px solid #fde047; border-radius: 10px; padding: 14px; font-size: 13px; color: #854d0e; text-align: center; margin-bottom: 14px; }
+.mt-ticket { background: #20302a; border-radius: 16px; overflow: hidden; }
+.mt-ticket-head { padding: 20px 20px 14px; text-align: center; }
+.mt-ticket-sep { height: 1px; margin: 0 18px; background: repeating-linear-gradient(90deg,rgba(255,255,255,.18) 0,rgba(255,255,255,.18) 5px,transparent 5px,transparent 11px); }
+.mt-ticket-body { padding: 14px 20px 18px; }
+.mt-ticket-fields { display: flex; flex-wrap: wrap; gap: 14px; }
+.mt-ticket-fields + .mt-ticket-fields { margin-top: 10px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,.12); }
+.mt-tf .mt-tk { font-size: 9px; font-weight: 700; color: rgba(255,255,255,.38); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 4px; }
+.mt-tf .mt-tv { font-size: 14px; font-weight: 700; color: #fff; }
+.mt-tf .mt-tv.gld { color: #e8c05a; }
+.mt-tf .mt-tv.grn { color: #86efac; }
+.mt-qr { text-align: center; padding: 14px 0 4px; }
+.mt-qr img { border-radius: 10px; border: 3px solid #e8c05a; box-shadow: 0 4px 16px rgba(213,168,59,.25); } border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: sp .6s linear infinite; vertical-align: middle; margin-right: 6px; }
 @keyframes sp { to { transform: rotate(360deg); } }
 
 #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(60px); background: #1e293b; color: #fff; padding: 10px 22px; border-radius: 8px; font-size: 13px; font-weight: 600; opacity: 0; transition: all .25s; z-index: 999; pointer-events: none; white-space: nowrap; }
@@ -245,7 +275,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
     <div class="hero-slide"><img class="hero-img" src="banner3.png" alt="Banner 3"/></div>
   </div>
   <div class="hero-overlay"></div>
-  <button class="home-btn" onclick="showPanel(1)" type="button" title="Home">
+  <button class="home-btn" onclick="goHome()" type="button" title="Home">
     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg>
   </button>
   <div class="hero-content">
@@ -314,7 +344,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
         <div class="err-msg">Please enter your full name</div>
       </div>
       <div class="field" id="f-flat">
-        <label>BA Unit # *</label>
+        <label>BA Villament # *</label>
         <input id="inp-flat" type="text" placeholder="e.g. B01-01"/>
         <div class="err-msg">Please enter your unit number</div>
       </div>
@@ -336,11 +366,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
       <h2>👥 Attendees</h2>
       <div class="pax-row">
         <div class="field">
-          <label>Adults <span style="color:var(--gray);font-weight:400">(₹600 each)</span></label>
+          <label>Adults <span style="color:var(--gray);font-weight:400">13+ yrs &nbsp;(&#8377;600 each)</span></label>
           <input id="inp-adults" type="number" min="1" max="20" value="1" oninput="calcAmount()"/>
         </div>
         <div class="field">
-          <label>Kids <span style="color:var(--gray);font-weight:400">(₹400 each)</span></label>
+          <label>Kids <span style="color:var(--gray);font-weight:400">6–12 yrs &nbsp;(&#8377;400 each)</span></label>
           <input id="inp-kids" type="number" min="0" max="20" value="0" oninput="calcAmount()"/>
         </div>
       </div>
@@ -409,6 +439,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
   <!-- PANEL 3: Confirmation -->
   <div class="panel" id="panel3">
     <div class="card" style="padding-bottom:8px">
+      <div class="happy-onam"><span class="ho-text">&#127804; Happy Onam! &#127804; Ponnonam 2026 &#127804;</span></div>
       <div class="ticket-card">
         <div class="ticket-header">
           <div class="ticket-badge">&#127804; Birla Alokya Ponnonam 2026</div>
@@ -419,7 +450,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
         <div class="ticket-sep"></div>
         <div class="ticket-body">
           <div class="ticket-fields">
-            <div class="tf"><div class="tk">Unit</div><div class="tv gld" id="conf-flat">—</div></div>
+            <div class="tf"><div class="tk">Villament</div><div class="tv gld" id="conf-flat">—</div></div>
             <div class="tf"><div class="tk">Adults</div><div class="tv" id="conf-adults">—</div></div>
             <div class="tf"><div class="tk">Kids</div><div class="tv" id="conf-kids">—</div></div>
             <div class="tf"><div class="tk">Amount</div><div class="tv gld" id="conf-amount">—</div></div>
@@ -440,14 +471,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
       </div>
       <p class="conf-note">&#128242; Once your payment is verified, your Ticket ID and QR code will be shared to your WhatsApp number.</p>
     </div>
-  </div>
-
-    <div class="card">
-      <h2>👨‍👩‍👧‍👦 2026 Ponnonam BA Family Wall</h2>
-      <div id="wall-count" class="wall-count">Loading families...</div>
-      <div id="family-wall" class="wall-mosaic"></div>
-    </div>
-
     <div class="card">
       <h2>&#128197; Add to Calendar</h2>
       <a id="gcal-link" class="btn-cal btn-gcal" href="#" target="_blank">
@@ -459,8 +482,42 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
         Download iCal (.ics)
       </a>
     </div>
+  </div>
+
+    <div class="card">
+      <h2>👨‍👩‍👧‍👦 2026 Ponnonam BA Family Wall</h2>
+      <div id="wall-count" class="wall-count">Loading families...</div>
+      <div id="family-wall" class="wall-mosaic"></div>
+    </div>
 
   </div><!-- end .wrap -->
+
+<!-- My Ticket FAB -->
+<button class="mt-fab" onclick="openMyTicket()">&#127903;&#65039; My Ticket</button>
+
+<!-- My Ticket Modal -->
+<div class="mt-overlay" id="mt-overlay" onclick="if(event.target===this)closeMyTicket()">
+  <div class="mt-modal">
+    <div class="mt-head">
+      <h3>&#127903;&#65039; Retrieve My Ticket</h3>
+      <button class="mt-close" onclick="closeMyTicket()">&times;</button>
+    </div>
+    <div class="mt-body">
+      <div id="mt-form-area">
+        <div class="field" id="mt-f-phone" style="margin-bottom:14px">
+          <label style="font-size:12px;font-weight:800;display:block;margin-bottom:6px">WhatsApp Number *</label>
+          <input id="mt-phone" type="tel" inputmode="numeric" placeholder="10-digit number" maxlength="10" style="width:100%;padding:12px 14px;border:1px solid #dfe5dc;border-radius:10px;font-size:14px;font-family:inherit;outline:none" oninput="this.value=this.value.replace(/\D/g,'')"/>
+        </div>
+        <div class="field" id="mt-f-flat" style="margin-bottom:18px">
+          <label style="font-size:12px;font-weight:800;display:block;margin-bottom:6px">BA Villament # *</label>
+          <input id="mt-flat" type="text" placeholder="e.g. B01-01" style="width:100%;padding:12px 14px;border:1px solid #dfe5dc;border-radius:10px;font-size:14px;font-family:inherit;outline:none;text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"/>
+        </div>
+        <button class="btn btn-primary" id="mt-submit-btn" onclick="lookupTicket()">&#128269; Find My Ticket</button>
+      </div>
+      <div class="mt-result" id="mt-result"></div>
+    </div>
+  </div>
+</div>
 
 <!-- Kerala decorations -->
 <div id="deco-leaf-l" class="kerala-deco">🍃</div>
@@ -555,6 +612,13 @@ function goToPayment() {
   if (hs) hs.style.transition = "opacity .3s", hs.style.opacity = "0", setTimeout(() => hs.style.display = "none", 300);
 
   showPanel(2);
+}
+
+function goHome() {
+  const hs = document.getElementById("highlights-section");
+  if (hs) { hs.style.display = ""; hs.style.opacity = "1"; }
+  showPanel(1);
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function goBack() { showPanel(1); }
@@ -848,6 +912,77 @@ function maskEmail(email) {
   const [user, domain] = email.split("@");
   const masked = user.length <= 2 ? "*".repeat(user.length) : user[0] + "*".repeat(user.length - 2) + user[user.length - 1];
   return masked + "@" + domain;
+}
+
+// ── My Ticket ─────────────────────────────────────────────
+function openMyTicket() {
+  document.getElementById("mt-overlay").classList.add("open");
+  document.getElementById("mt-result").classList.remove("show");
+  document.getElementById("mt-result").innerHTML = "";
+  document.getElementById("mt-form-area").style.display = "";
+  document.getElementById("mt-phone").value = "";
+  document.getElementById("mt-flat").value = "";
+  setTimeout(() => document.getElementById("mt-phone").focus(), 120);
+}
+
+function closeMyTicket() {
+  document.getElementById("mt-overlay").classList.remove("open");
+}
+
+async function lookupTicket() {
+  const phone = document.getElementById("mt-phone").value.trim().replace(/\D/g,"");
+  const flat  = document.getElementById("mt-flat").value.trim().toUpperCase();
+  if (phone.length !== 10) { toast("Enter a valid 10-digit number"); return; }
+  if (!flat) { toast("Enter your Villament number"); return; }
+
+  const btn = document.getElementById("mt-submit-btn");
+  btn.innerHTML = '<span class="spin"></span> Looking up…'; btn.disabled = true;
+
+  const data = await jsonp({ action: "getticket", phone, flat });
+  btn.innerHTML = "&#128269; Find My Ticket"; btn.disabled = false;
+
+  const resultEl = document.getElementById("mt-result");
+  resultEl.classList.add("show");
+
+  if (!data) { resultEl.innerHTML = '<div class="mt-err">&#9888;&#65039; Network error — please try again.</div>'; return; }
+
+  if (!data.ok) {
+    const isPending = data.status === "PENDING";
+    resultEl.innerHTML = '<div class="' + (isPending ? "mt-pending" : "mt-err") + '">' +
+      (isPending
+        ? "&#8987; Your payment is being verified. Your ticket will be available once approved."
+        : "&#10060; " + (data.message || "No registration found for these details.")) +
+      '</div>';
+    return;
+  }
+
+  document.getElementById("mt-form-area").style.display = "none";
+  const status = data.status === "CHECKED_IN" ? '<span class="mt-tv grn">Checked In &#10003;</span>'
+               : '<span class="mt-tv grn">Approved &#10003;</span>';
+  resultEl.innerHTML =
+    '<div class="mt-ticket">' +
+      '<div class="mt-ticket-head">' +
+        '<div style="font-size:11px;font-weight:800;color:#e8c05a;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px">&#127804; Birla Alokya Ponnonam 2026</div>' +
+        '<div style="font-size:36px;margin-bottom:6px">&#127903;&#65039;</div>' +
+        '<div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:4px">' + data.name + '</div>' +
+        '<div style="font-size:12px;color:rgba(255,255,255,.55)">Saturday, 26 Sep 2026 &middot; Clubhouse MPH</div>' +
+      '</div>' +
+      '<div class="mt-ticket-sep"></div>' +
+      '<div class="mt-ticket-body">' +
+        '<div class="mt-ticket-fields">' +
+          '<div class="mt-tf"><div class="mt-tk">Villament</div><div class="mt-tv gld">' + data.flat + '</div></div>' +
+          '<div class="mt-tf"><div class="mt-tk">Adults</div><div class="mt-tv">' + data.adults + '</div></div>' +
+          '<div class="mt-tf"><div class="mt-tk">Kids</div><div class="mt-tv">' + data.kids + '</div></div>' +
+          '<div class="mt-tf"><div class="mt-tk">Amount</div><div class="mt-tv gld">&#8377;' + data.amount + '</div></div>' +
+        '</div>' +
+        '<div class="mt-ticket-fields">' +
+          '<div class="mt-tf"><div class="mt-tk">Ticket ID</div><div class="mt-tv gld" style="font-family:monospace;letter-spacing:2px">' + data.ticketId + '</div></div>' +
+          '<div class="mt-tf"><div class="mt-tk">Status</div>' + status + '</div>' +
+        '</div>' +
+      '</div>' +
+      (data.qrUrl ? '<div class="mt-qr"><img src="' + data.qrUrl + '" width="160" height="160" alt="QR"/><div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:6px">Screenshot &amp; show at entry</div></div>' : '') +
+    '</div>' +
+    '<button class="btn btn-outline" style="margin-top:14px;font-size:13px" onclick="openMyTicket()">&#8592; Look up another</button>';
 }
 
 function toast(msg) {
