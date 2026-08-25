@@ -108,6 +108,7 @@ header .pin-tag { font-size: 11px; background: rgba(255,255,255,.18); border: 1p
 .stat.people::before   { background: linear-gradient(90deg, #ea580c, #fb923c); }
 .stat .n { font-size: 28px; font-weight: 800; }
 .stat .l { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: .4px; margin-top: 2px; }
+.stat-sub { font-size: 11px; color: var(--gray); margin-top: 5px; font-weight: 600; }
 .stat.pending  .n { color: var(--yellow); }
 .stat.approved .n { color: var(--brand); }
 .stat.checkin  .n { color: var(--green); }
@@ -445,7 +446,8 @@ tr:hover td { background: var(--brand-bg); }
   <div class="stats-row">
     <div class="stat pending">  <div class="n" id="s-pending">–</div>  <div class="l">Units yet to approve</div></div>
     <div class="stat approved"> <div class="n" id="s-approved">–</div> <div class="l">Units approved</div></div>
-    <div class="stat people">   <div class="n" id="s-people">–</div>   <div class="l">People approved</div></div>
+    <div class="stat pending">  <div class="n" id="s-pend-guests">–</div> <div class="l">Guests yet to approve</div><div class="stat-sub" id="s-pend-split">– adults · – kids</div></div>
+    <div class="stat people">   <div class="n" id="s-people">–</div>   <div class="l">Guests approved</div><div class="stat-sub" id="s-appr-split">– adults · – kids</div></div>
   </div>
   <div class="unit-stats-row" style="grid-template-columns:1fr">
     <div class="unit-stat">
@@ -485,7 +487,7 @@ tr:hover td { background: var(--brand-bg); }
   <div class="stats-row" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
     <div class="stat checkin"> <div class="n" id="sc-in">–</div>     <div class="l">Units checked in</div></div>
     <div class="stat approved"><div class="n" id="sc-rem">–</div>    <div class="l">Units not yet in</div></div>
-    <div class="stat people">  <div class="n" id="sc-people">–</div> <div class="l">People checked in</div></div>
+    <div class="stat people">  <div class="n" id="sc-people">–</div> <div class="l">Guests checked in</div></div>
     <div class="stat people">  <div class="n" id="sc-adki">–</div>   <div class="l">Adults / Kids</div></div>
   </div>
   <div class="unit-stats-row" style="grid-template-columns:1fr;margin-bottom:16px">
@@ -742,9 +744,17 @@ function updateStats(s) {
   const c = s.counts || {};
   set("s-pending",  c.PENDING    || 0);
   set("s-approved", c.APPROVED   || 0);
-  const approvedPeople = allRows.filter(r => r.status === "APPROVED")
-    .reduce((sum, r) => sum + (Number(r.adults)||0) + (Number(r.kids)||0), 0);
-  set("s-people", approvedPeople);
+  const pendingRows   = allRows.filter(r => r.status === "PENDING");
+  const pendingAdults = pendingRows.reduce((sum,r) => sum+(Number(r.adults)||0), 0);
+  const pendingKids   = pendingRows.reduce((sum,r) => sum+(Number(r.kids)||0), 0);
+  set("s-pend-guests", pendingAdults + pendingKids);
+  set("s-pend-split",  pendingAdults + " adults · " + pendingKids + " kids");
+
+  const approvedRows   = allRows.filter(r => r.status === "APPROVED");
+  const approvedAdults = approvedRows.reduce((sum,r) => sum+(Number(r.adults)||0), 0);
+  const approvedKids   = approvedRows.reduce((sum,r) => sum+(Number(r.kids)||0), 0);
+  set("s-people",     approvedAdults + approvedKids);
+  set("s-appr-split", approvedAdults + " adults · " + approvedKids + " kids");
   set("sc-in",     (c.CHECKED_IN||0) + (c.PARTIAL||0));
   set("sc-rem",    c.APPROVED   || 0);
   set("sc-people", (s.checkedAdults||0) + (s.checkedKids||0));
