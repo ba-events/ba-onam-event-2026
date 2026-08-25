@@ -443,10 +443,9 @@ tr:hover td { background: var(--brand-bg); }
 <!-- REVIEW PAYMENTS -->
 <div class="panel active" id="panel-review">
   <div class="stats-row">
-    <div class="stat pending">  <div class="n" id="s-pending">–</div>  <div class="l">Pending</div></div>
-    <div class="stat approved"> <div class="n" id="s-approved">–</div> <div class="l">Approved</div></div>
-    <div class="stat checkin">  <div class="n" id="s-checkin">–</div>  <div class="l">Checked In</div></div>
-    <div class="stat people">   <div class="n" id="s-people">–</div>   <div class="l">Total People</div></div>
+    <div class="stat pending">  <div class="n" id="s-pending">–</div>  <div class="l">Units yet to approve</div></div>
+    <div class="stat approved"> <div class="n" id="s-approved">–</div> <div class="l">Units approved</div></div>
+    <div class="stat people">   <div class="n" id="s-people">–</div>   <div class="l">People approved</div></div>
   </div>
   <div class="unit-stats-row" style="grid-template-columns:1fr">
     <div class="unit-stat">
@@ -484,10 +483,10 @@ tr:hover td { background: var(--brand-bg); }
 <!-- LIVE VIEW -->
 <div class="panel" id="panel-liveview">
   <div class="stats-row" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
-    <div class="stat checkin"> <div class="n" id="sc-in">–</div>  <div class="l">Checked In</div></div>
-    <div class="stat approved"><div class="n" id="sc-rem">–</div> <div class="l">Not Yet In</div></div>
-    <div class="stat people">  <div class="n" id="sc-ad">–</div>  <div class="l">Adults In</div></div>
-    <div class="stat people">  <div class="n" id="sc-ki">–</div>  <div class="l">Kids In</div></div>
+    <div class="stat checkin"> <div class="n" id="sc-in">–</div>     <div class="l">Units checked in</div></div>
+    <div class="stat approved"><div class="n" id="sc-rem">–</div>    <div class="l">Units not yet in</div></div>
+    <div class="stat people">  <div class="n" id="sc-people">–</div> <div class="l">People checked in</div></div>
+    <div class="stat people">  <div class="n" id="sc-adki">–</div>   <div class="l">Adults / Kids</div></div>
   </div>
   <div class="unit-stats-row" style="grid-template-columns:1fr;margin-bottom:16px">
     <div class="unit-stat">
@@ -743,12 +742,13 @@ function updateStats(s) {
   const c = s.counts || {};
   set("s-pending",  c.PENDING    || 0);
   set("s-approved", c.APPROVED   || 0);
-  set("s-checkin",  c.CHECKED_IN || 0);
-  set("s-people",   (s.totalAdults||0) + (s.totalKids||0));
-  set("sc-in",  (c.CHECKED_IN||0) + (c.PARTIAL||0));
-  set("sc-rem",  c.APPROVED   || 0);
-  set("sc-ad",  s.checkedAdults || 0);
-  set("sc-ki",  s.checkedKids   || 0);
+  const approvedPeople = allRows.filter(r => r.status === "APPROVED")
+    .reduce((sum, r) => sum + (Number(r.adults)||0) + (Number(r.kids)||0), 0);
+  set("s-people", approvedPeople);
+  set("sc-in",     (c.CHECKED_IN||0) + (c.PARTIAL||0));
+  set("sc-rem",    c.APPROVED   || 0);
+  set("sc-people", (s.checkedAdults||0) + (s.checkedKids||0));
+  set("sc-adki",   (s.checkedAdults||0) + " / " + (s.checkedKids||0));
   set("sc2-in",  (c.CHECKED_IN||0) + (c.PARTIAL||0));
   set("sc2-rem", c.APPROVED   || 0);
   set("sc2-tot", s.total       || 0);
