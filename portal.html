@@ -567,6 +567,13 @@ tr:hover td { background: var(--brand-bg); }
 
 <!-- ALL REGISTRATIONS -->
 <div class="panel" id="panel-all">
+  <div class="stats-row" style="grid-template-columns:minmax(0,1fr);max-width:260px;margin-bottom:14px">
+    <div class="stat approved">
+      <div class="n" id="sa-amount" style="font-size:22px">–</div>
+      <div class="l">Total amount collected</div>
+      <div class="stat-sub" style="color:var(--brand)">from approved registrations</div>
+    </div>
+  </div>
   <div class="table-wrap">
     <div class="tbl-controls">
       <input id="all-q" type="text" placeholder="Search name, unit, phone…" oninput="renderAll()"/>
@@ -755,6 +762,8 @@ function updateStats(s) {
   const approvedKids   = approvedRows.reduce((sum,r) => sum+(Number(r.kids)||0), 0);
   set("s-people",     approvedAdults + approvedKids);
   set("s-appr-split", approvedAdults + " adults · " + approvedKids + " kids");
+  const approvedAmount = approvedRows.reduce((sum,r) => sum + (Number(r.adults)||0)*600 + (Number(r.kids)||0)*400, 0);
+  set("sa-amount", "₹" + approvedAmount.toLocaleString("en-IN"));
   set("sc-in",     (c.CHECKED_IN||0) + (c.PARTIAL||0));
   set("sc-rem",    c.APPROVED   || 0);
   set("sc-people", (s.checkedAdults||0) + (s.checkedKids||0));
