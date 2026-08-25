@@ -489,6 +489,7 @@ tr:hover td { background: var(--brand-bg); }
     <div class="stat approved"><div class="n" id="sc-rem">–</div>    <div class="l">Units not yet in</div></div>
     <div class="stat people">  <div class="n" id="sc-people">–</div> <div class="l">Guests checked in</div></div>
     <div class="stat people">  <div class="n" id="sc-adki">–</div>   <div class="l">Adults / Kids</div></div>
+    <div class="stat approved"> <div class="n" id="sa-amount" style="font-size:20px">–</div><div class="l">Amount collected</div><div class="stat-sub" style="color:var(--brand)">approved only</div></div>
   </div>
   <div class="unit-stats-row" style="grid-template-columns:1fr;margin-bottom:16px">
     <div class="unit-stat">
@@ -567,13 +568,6 @@ tr:hover td { background: var(--brand-bg); }
 
 <!-- ALL REGISTRATIONS -->
 <div class="panel" id="panel-all">
-  <div class="stats-row" style="grid-template-columns:minmax(0,1fr);max-width:260px;margin-bottom:14px">
-    <div class="stat approved">
-      <div class="n" id="sa-amount" style="font-size:22px">–</div>
-      <div class="l">Total amount collected</div>
-      <div class="stat-sub" style="color:var(--brand)">from approved registrations</div>
-    </div>
-  </div>
   <div class="table-wrap">
     <div class="tbl-controls">
       <input id="all-q" type="text" placeholder="Search name, unit, phone…" oninput="renderAll()"/>
