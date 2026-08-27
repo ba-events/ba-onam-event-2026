@@ -585,9 +585,9 @@ addEventListener("DOMContentLoaded", () => {
   updateCountdown();
   setInterval(updateCountdown, 30000);
   initKeralaDeco();
-  loadFamilyWall();
   initLikedState();
   loadLikeCounts();
+  setTimeout(loadFamilyWall, 1500);
   // Hero image scroller
   const slides = document.querySelectorAll('.hero-slide');
   const dots   = document.querySelectorAll('.hero-dot');
@@ -837,7 +837,7 @@ function copyUpi() {
 }
 
 // ── JSONP ─────────────────────────────────────────────────
-function jsonp(params) {
+function jsonp(params, { silent = false } = {}) {
   return new Promise((resolve) => {
     if (!API_URL || API_URL === "YOUR_WEB_APP_URL_HERE") {
       toast("API URL not configured"); resolve(null); return;
@@ -846,7 +846,8 @@ function jsonp(params) {
     const script = document.createElement("script");
     const timer  = setTimeout(() => {
       delete window[cbName]; script.remove();
-      toast("Request timed out"); resolve(null);
+      if (!silent) toast("Request timed out");
+      resolve(null);
     }, 30000);
     window[cbName] = (data) => {
       clearTimeout(timer); delete window[cbName]; script.remove();
@@ -856,7 +857,8 @@ function jsonp(params) {
     script.src = API_URL + "?" + new URLSearchParams(params);
     script.onerror = () => {
       clearTimeout(timer); delete window[cbName]; script.remove();
-      toast("Network error"); resolve(null);
+      if (!silent) toast("Network error");
+      resolve(null);
     };
     document.head.appendChild(script);
   });
@@ -927,7 +929,7 @@ function loadFamilyWall() {
   const wallEl  = document.getElementById("family-wall");
   const countEl = document.getElementById("wall-count");
   if (!wallEl) return;
-  jsonp({ action: "list" }).then(data => {
+  jsonp({ action: "list" }, { silent: true }).then(data => {
     if (!data || !data.rows) { if (countEl) countEl.textContent = ""; return; }
     const active = data.rows.filter(r => r.status !== "REJECTED");
     if (countEl) countEl.innerHTML = "👨‍👩‍👧‍👦 <strong>" + active.length + " BA Families</strong> are celebrating together!";
@@ -956,7 +958,7 @@ function initLikedState() {
 function loadLikeCounts() {
   const local = JSON.parse(localStorage.getItem("hi_likes") || "{}");
   applyLikeCounts(local);
-  jsonp({ action: "getlikes" }).then(data => {
+  jsonp({ action: "getlikes" }, { silent: true }).then(data => {
     if (data && data.ok && data.counts) {
       localStorage.setItem("hi_likes", JSON.stringify(data.counts));
       applyLikeCounts(data.counts);
