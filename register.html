@@ -665,7 +665,15 @@ function goToPayment() {
   toggleErr("f-phone", phone.length !== 10);
   const emailInvalid = email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   toggleErr("f-email", emailInvalid);
-  if (!name || !flat || phone.length !== 10 || emailInvalid) return;
+  if (!name || !flat || phone.length !== 10 || emailInvalid) {
+    const firstErr = document.querySelector("#panel1 .field.has-err");
+    if (firstErr) {
+      firstErr.scrollIntoView({ behavior: "smooth", block: "center" });
+      const inp = firstErr.querySelector("input, select");
+      if (inp) setTimeout(() => inp.focus(), 350);
+    }
+    return;
+  }
 
   formData.name   = name;
   formData.flat   = normalizeFlat(flat);
@@ -709,7 +717,15 @@ function toggleErr(fieldId, hasErr) {
 async function submitRegistration() {
   const utr = document.getElementById("inp-utr").value.trim();
   toggleErr("f-utr", !utr);
-  if (!utr) return;
+  if (!utr) {
+    const firstErr = document.querySelector("#panel2 .field.has-err");
+    if (firstErr) {
+      firstErr.scrollIntoView({ behavior: "smooth", block: "center" });
+      const inp = firstErr.querySelector("input, select");
+      if (inp) setTimeout(() => inp.focus(), 350);
+    }
+    return;
+  }
 
   const experiences = [...document.querySelectorAll('input[name="exp"]:checked')].map(el => el.value).join(",");
 
@@ -914,7 +930,7 @@ function loadFamilyWall() {
   jsonp({ action: "list" }).then(data => {
     if (!data || !data.rows) { if (countEl) countEl.textContent = ""; return; }
     const active = data.rows.filter(r => r.status !== "REJECTED");
-    if (countEl) countEl.innerHTML = "👨‍👩‍👧‍👦 <strong>" + active.length + " Families</strong> are celebrating Ponnonam with us!";
+    if (countEl) countEl.innerHTML = "👨‍👩‍👧‍👦 <strong>" + active.length + " BA Families</strong> are celebrating together!";
     wallEl.innerHTML = active.map((r, i) => {
       const color = WALL_COLORS[i % WALL_COLORS.length];
       const first = r.name ? r.name.split(" ")[0] : "Family";
