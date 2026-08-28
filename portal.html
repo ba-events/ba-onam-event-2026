@@ -250,6 +250,8 @@ tr:hover td { background: var(--brand-bg); }
 .card-s-body { padding: 16px; }
 #reader-wrap { background: #000; border-radius: 8px; overflow: hidden; width: 100%; aspect-ratio: 1; max-width: 100%; margin: 0 auto 14px; border: 3px solid var(--brand); }
 #reader { width: 100%; height: 100%; }
+#reader video { width: 100% !important; height: 100% !important; object-fit: cover; }
+#qr-video { display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
 .cam-btns { display: flex; gap: 8px; margin-bottom: 12px; }
 .cam-btns button { flex: 1; padding: 11px; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
 #btn-start { background: var(--brand); color: #fff; }
@@ -547,7 +549,10 @@ tr:hover td { background: var(--brand-bg); }
     <div class="card-s">
       <div class="card-s-head">📷 QR Scanner</div>
       <div class="card-s-body">
-        <div id="reader-wrap"><div id="reader"></div></div>
+        <div id="reader-wrap">
+          <div id="reader"></div>
+          <video id="qr-video" playsinline autoplay muted></video>
+        </div>
         <div class="cam-btns">
           <button id="btn-start" onclick="startCam()">Start Camera</button>
           <button id="btn-stop"  onclick="stopCam()">Stop</button>
@@ -1115,11 +1120,69 @@ function verifyPin() {
 
 // ── Camera ────────────────────────────────────────────────
 let _t0 = 0, _tCamReady = 0, _tFirstFrame = 0;
+let _nativeStream = null, _scanInterval = null;
 
 function startCam() {
   _t0 = performance.now();
   console.log("[QR-BENCH] startCam() called", { t: 0 });
+  if ('BarcodeDetector' in window) {
+    console.log("[QR-BENCH] Path: native BarcodeDetector");
+    startCamNative();
+  } else {
+    console.log("[QR-BENCH] Path: html5-qrcode fallback");
+    startCamLib();
+  }
+}
 
+async function startCamNative() {
+  try {
+    const detector = new BarcodeDetector({ formats: ['qr_code'] });
+    const stream   = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+    _nativeStream  = stream;
+    const video    = document.getElementById('qr-video');
+    video.srcObject = stream;
+    video.style.display = 'block';
+    document.getElementById('reader').style.display = 'none';
+    await video.play();
+    _tCamReady = performance.now();
+    console.log("[QR-BENCH] Camera ready (native)", {
+      ms_from_start: Math.round(_tCamReady - _t0),
+      videoWidth: video.videoWidth, videoHeight: video.videoHeight,
+      clientWidth: video.clientWidth, clientHeight: video.clientHeight
+    });
+    scanning = true;
+    document.getElementById("btn-start").style.display = "none";
+    document.getElementById("btn-stop").style.display  = "block";
+    let detecting = false;
+    _scanInterval = setInterval(async () => {
+      if (!scanning || detecting || cooldown) return;
+      detecting = true;
+      try {
+        const barcodes = await detector.detect(video);
+        if (barcodes.length > 0) {
+          _tFirstFrame = performance.now();
+          console.log("[QR-BENCH] QR decoded (native)", {
+            ms_from_start:    Math.round(_tFirstFrame - _t0),
+            ms_from_camready: Math.round(_tFirstFrame - _tCamReady),
+            decoded: barcodes[0].rawValue,
+            videoWidth: video.videoWidth, videoHeight: video.videoHeight
+          });
+          cooldown = true;
+          doLookup(barcodes[0].rawValue.trim().toUpperCase());
+          setTimeout(() => cooldown = false, 4000);
+        }
+      } catch(e) {
+        /* silent */
+      } finally {
+        detecting = false;
+      }
+    }, 100);
+  } catch(e) {
+    toast("Camera error: " + e);
+  }
+}
+
+function startCamLib() {
   scanner = new Html5Qrcode("reader", {
     formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ],
     experimentalFeatures: { useBarCodeDetectorIfSupported: true }
@@ -1131,7 +1194,7 @@ function startCam() {
       if (cooldown) return;
       _tFirstFrame = performance.now();
       const video = document.querySelector("#reader video");
-      console.log("[QR-BENCH] QR decoded", {
+      console.log("[QR-BENCH] QR decoded (lib)", {
         ms_from_start:    Math.round(_tFirstFrame - _t0),
         ms_from_camready: Math.round(_tFirstFrame - _tCamReady),
         decoded,
@@ -1149,7 +1212,7 @@ function startCam() {
     _tCamReady = performance.now();
     scanning = true;
     const video = document.querySelector("#reader video");
-    console.log("[QR-BENCH] Camera ready", {
+    console.log("[QR-BENCH] Camera ready (lib)", {
       ms_from_start: Math.round(_tCamReady - _t0),
       videoWidth:   video ? video.videoWidth  : "?",
       videoHeight:  video ? video.videoHeight : "?",
@@ -1162,6 +1225,19 @@ function startCam() {
 }
 
 function stopCam() {
+  if (_scanInterval) { clearInterval(_scanInterval); _scanInterval = null; }
+  if (_nativeStream) {
+    _nativeStream.getTracks().forEach(t => t.stop());
+    _nativeStream = null;
+    const video = document.getElementById('qr-video');
+    video.srcObject = null;
+    video.style.display = 'none';
+    document.getElementById('reader').style.display = 'block';
+    scanning = false;
+    document.getElementById("btn-start").style.display = "block";
+    document.getElementById("btn-stop").style.display  = "none";
+    return;
+  }
   if (scanner && scanning) scanner.stop().then(() => {
     scanning = false;
     document.getElementById("btn-start").style.display = "block";
