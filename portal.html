@@ -1114,7 +1114,12 @@ function verifyPin() {
 }
 
 // ── Camera ────────────────────────────────────────────────
+let _t0 = 0, _tCamReady = 0, _tFirstFrame = 0;
+
 function startCam() {
+  _t0 = performance.now();
+  console.log("[QR-BENCH] startCam() called", { t: 0 });
+
   scanner = new Html5Qrcode("reader", {
     formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ],
     experimentalFeatures: { useBarCodeDetectorIfSupported: true }
@@ -1124,13 +1129,33 @@ function startCam() {
     { fps:25, qrbox: (w, h) => { const s = Math.floor(Math.min(w, h) * 0.82); return { width: s, height: s }; }, aspectRatio:1 },
     decoded => {
       if (cooldown) return;
+      _tFirstFrame = performance.now();
+      const video = document.querySelector("#reader video");
+      console.log("[QR-BENCH] QR decoded", {
+        ms_from_start:    Math.round(_tFirstFrame - _t0),
+        ms_from_camready: Math.round(_tFirstFrame - _tCamReady),
+        decoded,
+        videoWidth:   video ? video.videoWidth  : "?",
+        videoHeight:  video ? video.videoHeight : "?",
+        clientWidth:  video ? video.clientWidth  : "?",
+        clientHeight: video ? video.clientHeight : "?"
+      });
       cooldown = true;
       doLookup(decoded.trim().toUpperCase());
       setTimeout(() => cooldown=false, 4000);
     },
     () => {}
   ).then(() => {
+    _tCamReady = performance.now();
     scanning = true;
+    const video = document.querySelector("#reader video");
+    console.log("[QR-BENCH] Camera ready", {
+      ms_from_start: Math.round(_tCamReady - _t0),
+      videoWidth:   video ? video.videoWidth  : "?",
+      videoHeight:  video ? video.videoHeight : "?",
+      clientWidth:  video ? video.clientWidth  : "?",
+      clientHeight: video ? video.clientHeight : "?"
+    });
     document.getElementById("btn-start").style.display = "none";
     document.getElementById("btn-stop").style.display  = "block";
   }).catch(e => toast("Camera error: " + e));
@@ -1151,8 +1176,16 @@ function manualScan() {
 }
 
 async function doLookup(ticketId) {
+  const _tLookupStart = performance.now();
+  console.log("[QR-BENCH] doLookup start", { ticketId, ms_from_start: Math.round(_tLookupStart - _t0) });
   document.getElementById("manual").value = ticketId;
   const data = await api({ action:"lookup", ticket:ticketId, pin:SCANNER_PIN });
+  const _tLookupEnd = performance.now();
+  console.log("[QR-BENCH] API response", {
+    ms_api: Math.round(_tLookupEnd - _tLookupStart),
+    ms_total_from_start: Math.round(_tLookupEnd - _t0),
+    ok: data ? data.ok : null
+  });
   if (!data) return;
   if (!data.ok && data.message === "Invalid PIN") { toast("PIN error — re-enter PIN"); return; }
   if (data.duplicate || (!data.ok && !data.lookup)) { beep(false); showResult(data, ticketId); return; }
