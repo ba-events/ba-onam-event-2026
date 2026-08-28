@@ -1120,8 +1120,8 @@ function startCam() {
     experimentalFeatures: { useBarCodeDetectorIfSupported: true }
   });
   scanner.start(
-    { facingMode:"environment", width:{ ideal:1280 }, height:{ ideal:720 } },
-    { fps:25, qrbox: (w, h) => { const s = Math.floor(Math.min(w, h) * 0.82); return { width: s, height: s }; }, aspectRatio:1 },
+    { facingMode:"environment" },
+    { fps:25, qrbox: (w, h) => { const s = Math.floor(Math.min(w, h) * 0.82); return { width: s, height: s }; }, aspectRatio:1, videoConstraints:{ facingMode:"environment", width:{ ideal:1280 }, height:{ ideal:720 } } },
     decoded => {
       if (cooldown) return;
       cooldown = true;
