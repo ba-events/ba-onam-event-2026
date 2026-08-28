@@ -1115,9 +1115,12 @@ function verifyPin() {
 
 // ── Camera ────────────────────────────────────────────────
 function startCam() {
-  scanner = new Html5Qrcode("reader");
+  scanner = new Html5Qrcode("reader", {
+    formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ],
+    experimentalFeatures: { useBarCodeDetectorIfSupported: true }
+  });
   scanner.start(
-    { facingMode:"environment" },
+    { facingMode:"environment", width:{ ideal:1280 }, height:{ ideal:720 } },
     { fps:25, qrbox: (w, h) => { const s = Math.floor(Math.min(w, h) * 0.82); return { width: s, height: s }; }, aspectRatio:1 },
     decoded => {
       if (cooldown) return;
