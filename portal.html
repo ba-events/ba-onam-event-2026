@@ -450,7 +450,7 @@ tr:hover td { background: var(--brand-bg); }
     <div class="stat approved"> <div class="n" id="s-approved">–</div> <div class="l">Units approved</div></div>
     <div class="stat pending">  <div class="n" id="s-pend-guests">–</div> <div class="l">Guests yet to approve</div><div class="stat-sub" id="s-pend-split">– adults · – kids</div></div>
     <div class="stat people">   <div class="n" id="s-people">–</div>   <div class="l">Guests approved</div><div class="stat-sub" id="s-appr-split">– adults · – kids</div></div>
-    <div class="stat approved">  <div class="n" id="sa-amount" style="font-size:20px">–</div><div class="l">Amount collected</div><div class="stat-sub" style="color:var(--brand)">approved only</div></div>
+    <div class="stat approved">  <div class="n" id="sa-amount" style="font-size:20px">–</div><div class="l">Amount collected</div><div class="stat-sub" style="color:var(--brand)">approved + checked-in</div></div>
   </div>
   <div class="unit-stats-row" style="grid-template-columns:1fr">
     <div class="unit-stat">
@@ -756,7 +756,7 @@ function updateStats(s) {
   set("s-pend-guests", pendingAdults + pendingKids);
   set("s-pend-split",  pendingAdults + " adults · " + pendingKids + " kids");
 
-  const approvedRows   = allRows.filter(r => r.status === "APPROVED");
+  const approvedRows   = allRows.filter(r => ["APPROVED","CHECKED_IN","PARTIAL"].includes(r.status));
   const approvedAdults = approvedRows.reduce((sum,r) => sum+(Number(r.adults)||0), 0);
   const approvedKids   = approvedRows.reduce((sum,r) => sum+(Number(r.kids)||0), 0);
   set("s-people",     approvedAdults + approvedKids);
