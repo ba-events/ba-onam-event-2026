@@ -200,17 +200,24 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans
 .mt-result.show { display: block; }
 .mt-err { background: #fff1f1; border: 1px solid #fca5a5; border-radius: 10px; padding: 14px; font-size: 13px; color: #b91c1c; text-align: center; margin-bottom: 14px; }
 .mt-pending { background: #fef9c3; border: 1px solid #fde047; border-radius: 10px; padding: 14px; font-size: 13px; color: #854d0e; text-align: center; margin-bottom: 14px; }
-.mt-ticket { background: #20302a; border-radius: 16px; overflow: hidden; }
-.mt-ticket-head { padding: 20px 20px 14px; text-align: center; }
-.mt-ticket-sep { height: 1px; margin: 0 18px; background: repeating-linear-gradient(90deg,rgba(255,255,255,.18) 0,rgba(255,255,255,.18) 5px,transparent 5px,transparent 11px); }
-.mt-ticket-body { padding: 14px 20px 18px; }
-.mt-ticket-fields { display: flex; flex-wrap: wrap; gap: 14px; }
-.mt-ticket-fields + .mt-ticket-fields { margin-top: 10px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,.12); }
-.mt-tf .mt-tk { font-size: 9px; font-weight: 700; color: rgba(255,255,255,.38); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 4px; }
-.mt-tf .mt-tv { font-size: 14px; font-weight: 700; color: #fff; }
-.mt-tf .mt-tv.gld { color: #e8c05a; }
-.mt-tf .mt-tv.grn { color: #86efac; }
-.mt-flat-wrap { position: relative; }
+.mt-ticket { background: #faf9f5; border-radius: 16px; overflow: hidden; border: 1px solid #e8e0d4; }
+.mt-ticket-head { background: #f97316; padding: 18px 20px 14px; text-align: center; }
+.mt-ticket-head-title { font-size: 17px; font-weight: 800; color: #fff; letter-spacing: -.2px; }
+.mt-coupon-badge { display: inline-block; background: rgba(255,255,255,.22); color: #fff; font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; padding: 3px 12px; border-radius: 99px; border: 1px solid rgba(255,255,255,.5); margin-top: 8px; }
+.mt-perforation { position: relative; margin: 0; border: none; border-top: 2px dashed #d4c9b8; }
+.mt-perforation::before, .mt-perforation::after { content: ''; position: absolute; top: -9px; width: 16px; height: 16px; background: #fff; border-radius: 50%; border: 1px solid #e8e0d4; }
+.mt-perforation::before { left: -8px; }
+.mt-perforation::after { right: -8px; }
+.mt-ticket-sep { height: 1px; background: #e8e0d4; margin: 0; }
+.mt-ticket-body { padding: 16px 20px; }
+.mt-ticket-row { display: flex; align-items: flex-start; gap: 8px; padding: 9px 0; border-bottom: 1px solid #f0ebe2; font-size: 14px; }
+.mt-ticket-row:last-child { border-bottom: none; }
+.mt-ticket-label { color: #9ca3af; flex: 0 0 76px; font-size: 13px; }
+.mt-ticket-value { font-weight: 700; color: #111827; flex: 1; }
+.mt-ticket-id-val { color: #4338ca; font-size: 16px; letter-spacing: 1px; }
+.mt-qr { text-align: center; padding: 16px 20px 18px; }
+.mt-qr img { display: block; margin: 0 auto 10px; border-radius: 12px; border: 3px solid #4338ca; }
+.mt-qr-hint { font-size: 12px; color: #6b7280; font-weight: 600; }.mt-flat-wrap { position: relative; }
 .mt-flat-dd { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #fff; border: 1px solid #dfe5dc; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.12); max-height: 180px; overflow-y: auto; z-index: 2000; display: none; }
 .mt-flat-dd.open { display: block; }
 .mt-flat-opt { padding: 11px 14px; font-size: 14px; cursor: pointer; font-weight: 600; color: var(--ink); border-bottom: 1px solid #f1f5f0; }
@@ -512,9 +519,9 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans
             <div class="tf"><div class="tk">Email</div><div class="tv" id="conf-email" style="font-size:13px">—</div></div>
           </div>
         </div>
-        <div class="ticket-foot">&#128242; Once verified, QR ticket will be sent to your WhatsApp</div>
+        <div class="ticket-foot">&#127869;&#65039; Your ticket is your Sadhya Coupon — show QR or Ticket ID at the Sadhya Hall gate</div>
       </div>
-      <p class="conf-note">&#128242; Once your payment is verified, your Ticket ID and QR code will be shared to your WhatsApp number.</p>
+      <p class="conf-note">&#128242; Once your payment is verified, your Ticket ID and QR code will be shared to your WhatsApp.<br>&#127869;&#65039; <strong>Your ticket doubles as your Sadhya Coupon</strong> — show the QR or Ticket ID at the Sadhya Hall gate to be served.</p>
     </div>
     <div class="card">
       <h2>&#128197; Add / Share your ticket</h2>
@@ -1111,30 +1118,28 @@ function renderMtTicket(t) {
     const isPending = t.status === "PENDING";
     return '<div class="' + (isPending ? "mt-pending" : "mt-err") + '">' + (t.message || t.status) + '</div>';
   }
-  const statusHtml = t.status === "CHECKED_IN"
-    ? '<span class="mt-tv grn">Checked In &#10003;</span>'
-    : '<span class="mt-tv grn">Approved &#10003;</span>';
   return '<div class="mt-ticket">' +
     '<div class="mt-ticket-head">' +
-      '<div style="font-size:11px;font-weight:800;color:#e8c05a;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px">&#127804; Birla Alokya Ponnonam 2026</div>' +
-      '<div style="font-size:34px;margin-bottom:6px">&#127903;&#65039;</div>' +
-      '<div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:4px">' + t.name + '</div>' +
-      '<div style="font-size:11px;color:rgba(255,255,255,.5)">Saturday, 26 Sep 2026 &middot; Clubhouse MPH</div>' +
+      '<div style="font-size:24px;margin-bottom:6px">&#127804;</div>' +
+      '<div class="mt-ticket-head-title">2026 Onam BA Event</div>' +
+      '<div class="mt-coupon-badge">&#127869;&#65039; Sadhya Coupon</div>' +
     '</div>' +
-    '<div class="mt-ticket-sep"></div>' +
     '<div class="mt-ticket-body">' +
-      '<div class="mt-ticket-fields">' +
-        '<div class="mt-tf"><div class="mt-tk">Villament</div><div class="mt-tv gld">' + t.flat + '</div></div>' +
-        '<div class="mt-tf"><div class="mt-tk">Adults</div><div class="mt-tv">' + t.adults + '</div></div>' +
-        '<div class="mt-tf"><div class="mt-tk">Kids</div><div class="mt-tv">' + t.kids + '</div></div>' +
-        '<div class="mt-tf"><div class="mt-tk">Amount</div><div class="mt-tv gld">&#8377;' + t.amount + '</div></div>' +
-      '</div>' +
-      '<div class="mt-ticket-fields">' +
-        '<div class="mt-tf"><div class="mt-tk">Ticket ID</div><div class="mt-tv gld" style="font-family:monospace;letter-spacing:2px">' + t.ticketId + '</div></div>' +
-        '<div class="mt-tf"><div class="mt-tk">Status</div>' + statusHtml + '</div>' +
-      '</div>' +
+      '<div style="font-size:14px;margin-bottom:14px;color:#374151">Hi <strong>' + t.name.split(" ")[0] + '</strong>,<br>Your registration is confirmed! &#127881;</div>' +
+      '<div class="mt-ticket-row"><span class="mt-ticket-label">&#128205; Venue</span><span class="mt-ticket-value">Birla Alokya Clubhouse, MPH</span></div>' +
+      '<div class="mt-ticket-row"><span class="mt-ticket-label">&#128197; Date</span><span class="mt-ticket-value">Saturday, 26 Sep 2026</span></div>' +
+      '<div class="mt-ticket-row"><span class="mt-ticket-label">&#127968; Unit</span><span class="mt-ticket-value">' + t.flat + '</span></div>' +
+      '<div class="mt-ticket-row"><span class="mt-ticket-label">&#128101; Guests</span><span class="mt-ticket-value">' + t.adults + ' adult(s), ' + t.kids + ' kid(s)</span></div>' +
+      '<div class="mt-ticket-row"><span class="mt-ticket-label">&#127903;&#65039; Ticket ID</span><span class="mt-ticket-value mt-ticket-id-val">' + t.ticketId + '</span></div>' +
     '</div>' +
-    (t.qrUrl ? '<div class="mt-qr"><img src="' + t.qrUrl + '" width="160" height="160" alt="QR"/><div class="mt-qr-id">' + t.ticketId + '</div><div class="mt-qr-hint">Screenshot &amp; show at entry</div></div>' : '') +
+    '<hr class="mt-perforation"/>' +
+    (t.qrUrl ?
+      '<div class="mt-qr">' +
+        '<img src="' + t.qrUrl + '" width="200" height="200" alt="QR"/>' +
+        '<div class="mt-qr-hint">&#127869;&#65039; Show this coupon at the Sadhya Hall gate</div>' +
+      '</div>'
+    : '<div style="text-align:center;padding:14px 20px;font-size:13px;color:#6b7280">Show your Ticket ID <strong style="color:#4338ca">' + t.ticketId + '</strong> at the Sadhya Hall gate</div>') +
+    '<div style="text-align:center;padding:10px 20px 14px;font-size:13px;color:#6b7280;border-top:1px solid #f0ebe2">See you there! &#127804;</div>' +
   '</div>';
 }
 
