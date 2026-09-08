@@ -191,6 +191,26 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans
 .mt-overlay.open { display: flex; }
 .mt-modal { background: #fff; border-radius: 20px; width: 100%; max-width: 400px; overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,.3); animation: mtslide .25s cubic-bezier(.34,1.56,.64,1); }
 @keyframes mtslide { from { transform: scale(.88) translateY(20px); opacity: 0; } to { transform: none; opacity: 1; } }
+.btn-schedule { display: inline-flex; align-items: center; gap: 7px; background: rgba(255,255,255,.18); border: 1.5px solid rgba(255,255,255,.5); color: #fff; border-radius: 99px; padding: 8px 18px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: background .18s; margin-top: 12px; }
+.btn-schedule:hover { background: rgba(255,255,255,.28); }
+.sch-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 1010; display: none; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(4px); }
+.sch-overlay.open { display: flex; }
+.sch-modal { background: #fff; border-radius: 20px; width: 100%; max-width: 430px; overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,.3); animation: mtslide .25s cubic-bezier(.34,1.56,.64,1); max-height: 88vh; display: flex; flex-direction: column; }
+.sch-head { background: linear-gradient(135deg,#164f3a,#21654a); color: #fff; padding: 18px 22px; display: flex; align-items: flex-start; justify-content: space-between; flex-shrink: 0; }
+.sch-head h3 { margin: 0 0 4px; font-size: 16px; font-weight: 800; }
+.sch-head-sub { font-size: 12px; color: rgba(255,255,255,.72); }
+.sch-body { overflow-y: auto; overscroll-behavior: contain; padding: 4px 20px 20px; }
+.sch-row { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid #f0ebe2; }
+.sch-row:last-child { border-bottom: none; }
+.sch-left { flex: 0 0 88px; text-align: right; padding-top: 2px; }
+.sch-pill { display: inline-block; font-size: 10px; font-weight: 800; color: #fff; background: #164f3a; padding: 3px 8px; border-radius: 99px; white-space: nowrap; line-height: 1.4; }
+.sch-pill.sadya { background: #f97316; }
+.sch-right { flex: 1; }
+.sch-prog { font-size: 13px; font-weight: 700; color: #111827; margin-bottom: 3px; }
+.sch-detail { font-size: 11px; color: #6b7280; line-height: 1.5; }
+.sch-note { background: #f0f7f3; border-radius: 8px; padding: 10px 14px; margin-top: 14px; font-size: 12px; color: #374151; border-left: 3px solid #164f3a; line-height: 1.5; }
+.btn-programme { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 11px; border-radius: 10px; font-size: 13px; font-weight: 700; background: var(--brand-bg); color: var(--brand); border: 1.5px solid rgba(22,79,58,.3); cursor: pointer; font-family: inherit; width: 100%; margin-top: 8px; transition: background .18s; }
+.btn-programme:hover { background: #d0e9da; }
 .mt-head { background: linear-gradient(135deg,#164f3a,#21654a); color: #fff; padding: 20px 22px 16px; display: flex; align-items: center; justify-content: space-between; }
 .mt-head h3 { margin: 0; font-size: 16px; font-weight: 800; }
 .mt-close { background: none; border: none; color: rgba(255,255,255,.7); font-size: 22px; cursor: pointer; line-height: 1; padding: 0; }
@@ -342,6 +362,7 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans
       <span class="chip">📍 Clubhouse, MPH</span>
       <a class="chip" href="https://maps.app.goo.gl/U1HyHkS6fodXsV8X9" target="_blank" style="text-decoration:none;background:rgba(255,255,255,.3)">🗺 View on Google Maps</a>
     </div>
+    <button class="btn-schedule" onclick="openSchedule()">🎉 View Programme</button>
   </div>
   <div class="hero-dots">
     <div class="hero-dot active" onclick="heroGoTo(0)"></div>
@@ -524,6 +545,11 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans
       <p class="conf-note">&#128242; Once your payment is verified, your Ticket ID and QR code will be shared to your WhatsApp.<br>&#127869;&#65039; <strong>Your ticket doubles as your Sadhya Coupon</strong> — show the QR or Ticket ID at the Sadhya Hall gate to be served.</p>
     </div>
     <div class="card">
+      <h2>🎉 Event Programme</h2>
+      <p style="font-size:13px;color:var(--gray);margin:0 0 10px">See what's lined up for Ponnonam 2026</p>
+      <button class="btn-programme" onclick="openSchedule()">📅 View Full Programme</button>
+    </div>
+    <div class="card">
       <h2>&#128197; Add / Share your ticket</h2>
       <div class="btn-action-grid">
         <a id="gcal-link" class="btn-cal btn-gcal" href="#" target="_blank">
@@ -553,6 +579,58 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans
     </div>
 
   </div><!-- end .wrap -->
+
+<!-- Schedule Modal -->
+<div class="sch-overlay" id="sch-overlay" onclick="if(event.target===this)closeSchedule()">
+  <div class="sch-modal">
+    <div class="sch-head">
+      <div>
+        <h3>🎉 Ponnonam 2026 — Programme</h3>
+        <div class="sch-head-sub">📅 Saturday, 26 Sep 2026 &nbsp;·&nbsp; Birla Alokya Clubhouse, MPH</div>
+      </div>
+      <button class="mt-close" onclick="closeSchedule()">&#10005;</button>
+    </div>
+    <div class="sch-body">
+      <div class="sch-row">
+        <div class="sch-left"><span class="sch-pill">8:30–9:00 AM</span></div>
+        <div class="sch-right"><div class="sch-prog">📸 Residents Gathering &amp; Pookalam Viewing</div><div class="sch-detail">Residents to assemble before the procession. Photo session at the Pookalam.</div></div>
+      </div>
+      <div class="sch-row">
+        <div class="sch-left"><span class="sch-pill">9:00–9:45 AM</span></div>
+        <div class="sch-right"><div class="sch-prog">🥁 Chendamelam &amp; Onam Procession</div><div class="sch-detail">Traditional Chendamelam percussion and Onam procession through the community.</div></div>
+      </div>
+      <div class="sch-row">
+        <div class="sch-left"><span class="sch-pill">9:45–9:55 AM</span></div>
+        <div class="sch-right"><div class="sch-prog">🎊 Welcome &amp; Inauguration</div><div class="sch-detail">Welcome Address, Lamp Lighting &amp; Opening Ceremony.</div></div>
+      </div>
+      <div class="sch-row">
+        <div class="sch-left"><span class="sch-pill">9:55–11:05 AM</span></div>
+        <div class="sch-right"><div class="sch-prog">🎭 Cultural Programs</div><div class="sch-detail"><strong>Communal Harmony</strong> — Dance forms of the states · <strong>Onam Twogether</strong> — Pair Ramp Walk · <strong>Onam Communal Skit</strong> — By Kids · <strong>Soulful Medley</strong> — Apoorva &amp; Deepthi</div></div>
+      </div>
+      <div class="sch-row">
+        <div class="sch-left"><span class="sch-pill">11:05–11:45 AM</span></div>
+        <div class="sch-right"><div class="sch-prog">🥋 Kalaripayattu</div><div class="sch-detail">Traditional Kerala martial art showcasing agility, discipline, combat techniques, weapon skills and physical prowess.</div></div>
+      </div>
+      <div class="sch-row">
+        <div class="sch-left"><span class="sch-pill">11:45 AM–12:45 PM</span></div>
+        <div class="sch-right"><div class="sch-prog">🎯 Onam Games</div><div class="sch-detail">Lemon &amp; Spoon · Biscuit Bite · Musical Chairs · Blindfolded "Onam Viral Walk"</div></div>
+      </div>
+      <div class="sch-row">
+        <div class="sch-left"><span class="sch-pill sadya">12:00 PM+</span></div>
+        <div class="sch-right"><div class="sch-prog">🍛 Onam Sadhya</div><div class="sch-detail">Served in batches for a smooth dining experience. <strong>Your ticket is your Sadhya Coupon</strong> — show QR or Ticket ID at the Sadhya Hall gate.</div></div>
+      </div>
+      <div class="sch-row">
+        <div class="sch-left"><span class="sch-pill">2:30–3:15 PM</span></div>
+        <div class="sch-right"><div class="sch-prog">💪 Tug of War</div><div class="sch-detail">BA Residents — Gents, Ladies, Teens &amp; Kids</div></div>
+      </div>
+      <div class="sch-row">
+        <div class="sch-left"><span class="sch-pill">3:15 PM+</span></div>
+        <div class="sch-right"><div class="sch-prog">🏆 Prize Distribution &amp; Felicitation</div><div class="sch-detail">Winners of games and other competitions; felicitation of participants and contributors.</div></div>
+      </div>
+      <div class="sch-note">📌 Onam Sadhya commences from <strong>12:00 PM onwards</strong> and will be served in batches while scheduled activities continue in parallel.</div>
+    </div>
+  </div>
+</div>
 
 <!-- My Ticket FAB -->
 <button class="mt-fab" onclick="openMyTicket()">&#127903;&#65039; My Ticket</button>
@@ -1039,6 +1117,13 @@ function maskEmail(email) {
 }
 
 // ── My Ticket ─────────────────────────────────────────────
+function openSchedule() {
+  document.getElementById("sch-overlay").classList.add("open");
+}
+function closeSchedule() {
+  document.getElementById("sch-overlay").classList.remove("open");
+}
+
 function openMyTicket() {
   document.getElementById("mt-overlay").classList.add("open");
   document.getElementById("mt-result").classList.remove("show");
