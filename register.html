@@ -140,6 +140,15 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans
 .upi-steps li::before { content: counter(steps); position: absolute; left: 0; top: 4px; width: 20px; height: 20px; background: linear-gradient(135deg, var(--brand), #21654a); color: #fff; border-radius: 50%; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
 .copy-btn { background: none; border: 1px solid var(--border-hard); padding: 4px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; color: var(--gray); margin-left: 8px; transition: all .15s; }
 .copy-btn:hover { background: var(--brand-bg); color: var(--brand); border-color: var(--brand); }
+.upi-apps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 4px 0 16px; }
+.upi-app-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 9px 4px; border-radius: 10px; border: none; font-size: 10px; font-weight: 700; cursor: pointer; font-family: inherit; color: #fff; transition: opacity .15s, transform .12s; letter-spacing: .01em; }
+.upi-app-btn:active { opacity: .82; transform: scale(.96); }
+.upi-gpay    { background: #fff; border: 1.5px solid #dadce0 !important; }
+.upi-phonepe { background: #5f259f; }
+.upi-paytm   { background: #00baf2; }
+.upi-cred    { background: #1a1a1a; }
+.upi-divider { display: flex; align-items: center; gap: 8px; margin: 2px 0 14px; color: var(--gray); font-size: 12px; }
+.upi-divider::before, .upi-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
 /* Buttons */
 .btn { width: 100%; padding: 14px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; transition: box-shadow .15s, transform .1s; }
@@ -475,8 +484,38 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans
     <div class="card">
       <h2>💰 Pay via UPI</h2>
       <div class="upi-box">
-        <p style="font-size:13px;color:var(--gray);margin-bottom:8px">Scan the QR code with any UPI app</p>
-        <img id="upi-qr" src="" width="200" height="200" alt="UPI QR"/>
+        <p style="font-size:13px;color:var(--gray);margin-bottom:10px">Tap your app — amount is pre-filled ✓</p>
+        <div class="upi-apps">
+          <button class="upi-app-btn upi-gpay" onclick="openUpiApp('gpay')">
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            <span style="color:#3c4043">G Pay</span>
+          </button>
+          <button class="upi-app-btn upi-phonepe" onclick="openUpiApp('phonepe')">
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 3h8c2.76 0 5 2.24 5 5.5S17.76 14 15 14h-3v7H7V3zm5 8h3c1.38 0 2.5-1.12 2.5-2.5S16.38 6 15 6h-3v5z" fill="white"/>
+            </svg>
+            <span>PhonePe</span>
+          </button>
+          <button class="upi-app-btn upi-paytm" onclick="openUpiApp('paytm')">
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 6H3c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H3V8h18v10zM5 14h4v2H5zm6 0h4v2h-4z" fill="white"/>
+            </svg>
+            <span>Paytm</span>
+          </button>
+          <button class="upi-app-btn upi-cred" onclick="openUpiApp('cred')">
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20 7.24l-1.42-1.42C17.07 4.42 14.66 3.5 12 3.5c-2.66 0-5.07.92-6.58 2.32L4 4.4V9h4.6l-1.5-1.5C8.22 6.41 10.01 5.5 12 5.5c2 0 3.79.91 4.9 2l1.1 1.09V7.24zM4 16.76l1.42 1.42C6.93 19.58 9.34 20.5 12 20.5c2.66 0 5.07-.92 6.58-2.32L20 19.6V15h-4.6l1.5 1.5C15.78 17.59 13.99 18.5 12 18.5c-2 0-3.79-.91-4.9-2l-1.1-1.09v1.35z" fill="white"/>
+            </svg>
+            <span>CRED</span>
+          </button>
+        </div>
+        <div class="upi-divider">or scan QR</div>
+        <img id="upi-qr" src="" width="180" height="180" alt="UPI QR"/>
         <div>
           <span style="font-size:13px;color:var(--gray)">UPI ID:</span>
           <span class="upi-id" id="upi-id-text">&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;</span>
@@ -492,11 +531,10 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans
     <div class="card">
       <h2>🧾 Payment Confirmation</h2>
       <ol class="upi-steps" style="margin-bottom:18px">
-        <li>Open GPay, PhonePe, Paytm or any UPI app</li>
-        <li>Scan the QR above or enter the UPI ID</li>
-        <li>Pay exactly <strong id="pay-amount-2">₹600</strong></li>
-        <li>Copy the 12-digit UTR / transaction ID from your payment app</li>
-        <li>Paste it below and submit</li>
+        <li>Tap your UPI app above, or scan the QR code</li>
+        <li>Verify the pre-filled amount — <strong id="pay-amount-2">₹600</strong> — and complete the payment</li>
+        <li>Return here — copy the transaction ID from your UPI app</li>
+        <li>Paste it below and tap Submit</li>
       </ol>
       <div class="field" id="f-utr">
         <label>UTR / Transaction Reference *</label>
@@ -853,8 +891,9 @@ async function submitRegistration() {
     experiences: experiences,
   });
 
-  // Auto-retry once on null (network drop) or server error
-  if (!data || (!data.ok && data.message && (data.message.includes("busy") || data.message.includes("error")))) {
+  // Auto-retry once only on true network failure (null = timeout/offline), not on server errors
+  // — server errors may fire AFTER appendRow() already succeeded, causing duplicates
+  if (data === null) {
     toast("Retrying…");
     await new Promise(r => setTimeout(r, 2000 + Math.random() * 2000));
     const retry = await jsonp({
@@ -939,6 +978,41 @@ function copyUpi() {
   navigator.clipboard.writeText(UPI_ID)
     .then(() => toast("UPI ID copied!"))
     .catch(() => toast("Copy: " + UPI_ID));
+}
+
+function openUpiApp(app) {
+  const amount = formData.amount || 600;
+  const pa = encodeURIComponent(UPI_ID);
+  const pn = encodeURIComponent(UPI_NAME);
+  const tn = encodeURIComponent("Ponnonam 2026");
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent.toLowerCase());
+
+  const schemes = {
+    gpay:    isIOS ? "gpay://upi/pay"  : "tez://upi/pay",
+    phonepe: "phonepe://pay",
+    paytm:   "paytmmp://pay",
+    cred:    "credpay://upi/pay",
+  };
+  const url = schemes[app] + "?pa=" + pa + "&pn=" + pn + "&am=" + amount + "&tn=" + tn + "&cu=INR";
+
+  // When user returns to the tab after paying, nudge them to paste UTR
+  let didLeave = false;
+  function onVisChange() {
+    if (document.hidden) { didLeave = true; return; }
+    if (!didLeave) return;
+    document.removeEventListener("visibilitychange", onVisChange);
+    const utrEl = document.getElementById("inp-utr");
+    if (utrEl && !utrEl.value) {
+      setTimeout(() => {
+        utrEl.scrollIntoView({ behavior: "smooth", block: "center" });
+        utrEl.focus();
+        toast("Payment done? Paste your transaction ID below ✅");
+      }, 500);
+    }
+  }
+  document.addEventListener("visibilitychange", onVisChange);
+
+  window.location.href = url;
 }
 
 // ── JSONP ─────────────────────────────────────────────────
