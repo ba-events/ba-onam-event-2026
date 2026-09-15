@@ -141,12 +141,12 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans
 .copy-btn { background: none; border: 1px solid var(--border-hard); padding: 4px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; color: var(--gray); margin-left: 8px; transition: all .15s; }
 .copy-btn:hover { background: var(--brand-bg); color: var(--brand); border-color: var(--brand); }
 .upi-apps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 4px 0 16px; }
-.upi-app-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 9px 4px; border-radius: 10px; border: none; font-size: 10px; font-weight: 700; cursor: pointer; font-family: inherit; color: #fff; transition: opacity .15s, transform .12s; letter-spacing: .01em; }
-.upi-app-btn:active { opacity: .82; transform: scale(.96); }
-.upi-gpay    { background: #fff; border: 1.5px solid #dadce0 !important; }
-.upi-phonepe { background: #5f259f; }
-.upi-paytm   { background: #00baf2; }
-.upi-cred    { background: #1a1a1a; }
+.upi-app-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 9px 4px; border-radius: 10px; border: none; font-size: 10px; font-weight: 700; cursor: pointer; font-family: inherit; color: #fff; transition: transform .1s, box-shadow .1s; letter-spacing: .01em; position: relative; }
+.upi-app-btn:active { transform: translateY(3px) !important; box-shadow: 0 1px 0 rgba(0,0,0,.2) !important; }
+.upi-gpay    { background: #fff; border: 1.5px solid #dadce0; box-shadow: 0 4px 0 #b0b4bc, 0 2px 6px rgba(0,0,0,.12); }
+.upi-phonepe { background: linear-gradient(180deg,#7b35c1,#5f259f); box-shadow: 0 4px 0 #3d1666, 0 2px 6px rgba(95,37,159,.4); }
+.upi-paytm   { background: linear-gradient(180deg,#29ceff,#00baf2); box-shadow: 0 4px 0 #0090bc, 0 2px 6px rgba(0,186,242,.4); }
+.upi-cred    { background: linear-gradient(180deg,#333,#1a1a1a); box-shadow: 0 4px 0 #000, 0 2px 6px rgba(0,0,0,.4); }
 .upi-divider { display: flex; align-items: center; gap: 8px; margin: 2px 0 14px; color: var(--gray); font-size: 12px; }
 .upi-divider::before, .upi-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
@@ -1110,7 +1110,8 @@ function loadFamilyWall() {
   if (!wallEl) return;
   jsonp({ action: "list" }, { silent: true }).then(data => {
     if (!data || !data.rows) { if (countEl) countEl.textContent = ""; return; }
-    const active = data.rows.filter(r => r.status !== "REJECTED");
+    const active = data.rows.filter(r => r.status !== "REJECTED")
+                             .sort(() => Math.random() - 0.5);
     if (countEl) countEl.innerHTML = "👨‍👩‍👧‍👦 <strong>" + active.length + " BA Families</strong> are celebrating together!";
     wallEl.innerHTML = active.map((r, i) => {
       const color = WALL_COLORS[i % WALL_COLORS.length];
