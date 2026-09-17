@@ -677,7 +677,7 @@ addEventListener("DOMContentLoaded", () => {
     document.getElementById("cfg-url").value = API;
     document.getElementById("cfg-wrap").style.display = "none";
     loadAll();
-    setInterval(loadAll, 15000);
+    setInterval(() => loadAll(true), 45000);
   }  document.getElementById("pin-input").addEventListener("keydown", e => { if (e.key === "Enter") verifyPin(); });
   document.getElementById("manual").addEventListener("keydown",    e => { if (e.key === "Enter") manualScan(); });
 });
@@ -695,7 +695,7 @@ function saveConfig() {
   document.getElementById("cfg-wrap").style.display = "none";
   toast("Connected!");
   loadAll();
-  setInterval(loadAll, 15000);
+  setInterval(() => loadAll(true), 45000);
 }
 
 function requirePin() {
@@ -719,30 +719,31 @@ function switchTab(id) {
 }
 
 // ── JSONP API ─────────────────────────────────────────────
-function api(params) {
+function api(params, { silent = false } = {}) {
   return new Promise((resolve) => {
     if (!API) { toast("Not connected"); resolve(null); return; }
     const cbName = "_cb" + Date.now() + Math.floor(Math.random() * 1000);
     const script = document.createElement("script");
     const timer  = setTimeout(() => {
-      delete window[cbName]; script.remove(); toast("Request timed out"); resolve(null);
+      delete window[cbName]; script.remove();
+      if (!silent) toast("Request timed out");
+      resolve(null);
     }, 30000);
     window[cbName] = (data) => { clearTimeout(timer); delete window[cbName]; script.remove(); resolve(data); };
     params.callback = cbName;
     script.src = API + "?" + new URLSearchParams(params);
-    script.onerror = () => { clearTimeout(timer); delete window[cbName]; script.remove(); toast("Network error"); resolve(null); };
+    script.onerror = () => { clearTimeout(timer); delete window[cbName]; script.remove(); if (!silent) toast("Network error"); resolve(null); };
     document.head.appendChild(script);
   });
 }
 
-async function loadAll() {
-  const [list, stats] = await Promise.all([api({ action:"list" }), api({ action:"stats" })]);
-  if (list && list.ok) {
-    allRows = list.rows || [];
-    renderReview(); renderAll(); renderFlatGrid(allRows);
-    updateUnitStats();
-  }
-  if (stats && stats.ok) updateStats(stats);
+async function loadAll(silent = false) {
+  const data = await api({ action: "listandstats" }, { silent });
+  if (!data || !data.ok) return; // keep stale data visible on failure
+  allRows = data.rows || [];
+  renderReview(); renderAll(); renderFlatGrid(allRows);
+  updateUnitStats();
+  updateStats(data);
 }
 
 // ── Stats ─────────────────────────────────────────────────
