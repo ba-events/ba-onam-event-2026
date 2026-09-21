@@ -94,12 +94,9 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans
 
 /* Ticker */
 .ticker-wrap { background: linear-gradient(90deg, #0d3326, #164f3a, #0d3326); overflow: hidden; padding: 7px 0; position: relative; z-index: 10; border-bottom: 2px solid #d5a83b; }
-.ticker-track { display: flex; flex-wrap: nowrap; width: max-content; animation: ticker-scroll 22s linear infinite; will-change: transform; transform: translateZ(0); }
-.ticker-track:hover { animation-play-state: paused; }
+.ticker-track { display: flex; flex-wrap: nowrap; will-change: transform; }
 .ticker-item { display: inline-flex; align-items: center; flex-shrink: 0; white-space: nowrap; padding: 0 40px; font-size: 13px; font-weight: 700; color: #fff; letter-spacing: .02em; }
 .ticker-item .ticker-sep { margin: 0 12px; opacity: .6; }
-@keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-@media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; } }
 .home-btn { display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.18); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,.35); color: #fff; padding: 7px; border-radius: 50%; cursor: pointer; position: absolute; bottom: 12px; left: 12px; z-index: 10; font-family: inherit; transition: background .15s; width: 32px; height: 32px; }
 .home-btn:hover { background: rgba(255,255,255,.3); }
 .steps { display: flex; justify-content: center; gap: 0; background: rgba(255,255,255,.7); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); }
@@ -395,7 +392,6 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans
 <!-- Ticker -->
 <div class="ticker-wrap" role="marquee" aria-label="Registration closing notice">
   <div class="ticker-track">
-    <span class="ticker-item">📢 Registration closes on <strong>Thursday, 24th September at 8:00 PM</strong> <span class="ticker-sep">•</span> Book your Sadhya coupons before the portal closes! 🌼</span>
     <span class="ticker-item">📢 Registration closes on <strong>Thursday, 24th September at 8:00 PM</strong> <span class="ticker-sep">•</span> Book your Sadhya coupons before the portal closes! 🌼</span>
   </div>
 </div>
@@ -1361,6 +1357,25 @@ function toast(msg) {
   el.textContent = msg; el.classList.add("show");
   setTimeout(() => el.classList.remove("show"), 3200);
 }
+
+// Ticker scroll — RAF-based for reliable mobile support
+(function () {
+  const track = document.querySelector(".ticker-track");
+  if (!track || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  // Duplicate content so loop is seamless
+  const origItems = Array.from(track.children);
+  origItems.forEach(item => track.appendChild(item.cloneNode(true)));
+  let x = 0;
+  const speed = 0.45; // px per frame (~27px/s at 60fps)
+  function tick() {
+    x += speed;
+    const half = track.scrollWidth / 2;
+    if (half > 0 && x >= half) x -= half;
+    track.style.transform = "translateX(-" + x.toFixed(2) + "px)";
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
 </script>
 
 <div class="footer-wave-wrap" aria-hidden="true">
