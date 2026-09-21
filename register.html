@@ -218,6 +218,11 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans
 .sch-prog { font-size: 13px; font-weight: 700; color: #111827; margin-bottom: 3px; }
 .sch-detail { font-size: 11px; color: #6b7280; line-height: 1.5; }
 .sch-note { background: #f0f7f3; border-radius: 8px; padding: 10px 14px; margin-top: 14px; font-size: 12px; color: #374151; border-left: 3px solid #164f3a; line-height: 1.5; }
+.sch-tabs { display: flex; gap: 6px; padding: 14px 20px 0; flex-shrink: 0; }
+.sch-tab { flex: 1; padding: 8px 10px; border-radius: 10px; border: 1.5px solid #d4e0da; background: #fff; font-size: 11px; font-weight: 700; cursor: pointer; font-family: inherit; color: #6b7280; transition: all .15s; line-height: 1.4; text-align: center; }
+.sch-tab.active { background: #164f3a; color: #fff; border-color: #164f3a; }
+.sch-day { display: none; }
+.sch-day.active { display: block; }
 .btn-programme { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 11px; border-radius: 10px; font-size: 13px; font-weight: 700; background: var(--brand-bg); color: var(--brand); border: 1.5px solid rgba(22,79,58,.3); cursor: pointer; font-family: inherit; width: 100%; margin-top: 8px; transition: background .18s; }
 .btn-programme:hover { background: #d0e9da; }
 .mt-head { background: linear-gradient(135deg,#164f3a,#21654a); color: #fff; padding: 20px 22px 16px; display: flex; align-items: center; justify-content: space-between; }
@@ -625,48 +630,76 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans
     <div class="sch-head">
       <div>
         <h3>🎉 Ponnonam 2026 — Programme</h3>
-        <div class="sch-head-sub">📅 Saturday, 26 Sep 2026 &nbsp;·&nbsp; Birla Alokya Clubhouse, MPH &amp; Central Garden</div>
+        <div class="sch-head-sub">📅 25–26 Sep 2026 &nbsp;·&nbsp; Birla Alokya Clubhouse, MPH &amp; Central Garden</div>
       </div>
       <button class="mt-close" onclick="closeSchedule()">&#10005;</button>
     </div>
+    <div class="sch-tabs">
+      <button class="sch-tab" data-day="fri" onclick="switchSchDay('fri')">📅 Fri, 25 Sep<br><span style="font-weight:400;font-size:10px">Eve Stalls</span></button>
+      <button class="sch-tab active" data-day="sat" onclick="switchSchDay('sat')">🎉 Sat, 26 Sep<br><span style="font-weight:400;font-size:10px">Main Celebration</span></button>
+    </div>
     <div class="sch-body">
-      <div class="sch-row">
-        <div class="sch-left"><span class="sch-pill">8:30–9:00 AM</span></div>
-        <div class="sch-right"><div class="sch-prog">📸 Residents Gathering &amp; Pookalam Viewing</div><div class="sch-detail">Residents to assemble before the procession. Photo session at the Pookalam.</div></div>
+
+      <!-- Friday, 25 Sep -->
+      <div class="sch-day" data-day="fri">
+        <div class="sch-row">
+          <div class="sch-left"><span class="sch-pill">4:00 PM+</span></div>
+          <div class="sch-right">
+            <div class="sch-prog">☕ Tea Stall</div>
+            <div class="sch-detail">Unwind with a cup of freshly brewed <strong>chaya</strong> paired with a selection of special Malabar snacks. A perfect evening treat before the big day!</div>
+          </div>
+        </div>
+        <div class="sch-row">
+          <div class="sch-left"><span class="sch-pill">4:00 PM+</span></div>
+          <div class="sch-right">
+            <div class="sch-prog">🛍️ Kerala Items Stall</div>
+            <div class="sch-detail">Browse and shop an authentic collection of Kerala treasures — handloom <strong>kasavu sarees &amp; mundu sets</strong>, traditional <strong>Brass &amp; Bell Metal Décor</strong>, <strong>Nilavilakku &amp; Uruli</strong>, <strong>Aranmula Mirror</strong>, <strong>Heritage Gifts</strong> and <strong>Temple Collections</strong>. A wonderful opportunity to take a piece of Kerala home!</div>
+          </div>
+        </div>
+        <div class="sch-note">🌸 Friday evening stalls are open to all residents — no registration required. Come, browse, and soak in the Onam spirit the evening before the main celebration!</div>
       </div>
-      <div class="sch-row">
-        <div class="sch-left"><span class="sch-pill">9:00–9:45 AM</span></div>
-        <div class="sch-right"><div class="sch-prog">🥁 Chendamelam &amp; Onam Procession</div><div class="sch-detail">Traditional Chendamelam and Onam procession through the community.</div></div>
+
+      <!-- Saturday, 26 Sep -->
+      <div class="sch-day active" data-day="sat">
+        <div class="sch-row">
+          <div class="sch-left"><span class="sch-pill">8:30–9:00 AM</span></div>
+          <div class="sch-right"><div class="sch-prog">📸 Residents Gathering &amp; Pookalam Viewing</div><div class="sch-detail">Residents to assemble before the procession. Photo session at the Pookalam.</div></div>
+        </div>
+        <div class="sch-row">
+          <div class="sch-left"><span class="sch-pill">9:00–9:45 AM</span></div>
+          <div class="sch-right"><div class="sch-prog">🥁 Chendamelam &amp; Onam Procession</div><div class="sch-detail">Traditional Chendamelam and Onam procession through the community.</div></div>
+        </div>
+        <div class="sch-row">
+          <div class="sch-left"><span class="sch-pill">9:45–9:55 AM</span></div>
+          <div class="sch-right"><div class="sch-prog">🎊 Welcome &amp; Inauguration</div><div class="sch-detail">Welcome Address, Lamp Lighting &amp; Opening Ceremony.</div></div>
+        </div>
+        <div class="sch-row">
+          <div class="sch-left"><span class="sch-pill">9:55–11:05 AM</span></div>
+          <div class="sch-right"><div class="sch-prog">🎭 Cultural Programs</div><div class="sch-detail"><strong>Communal Harmony</strong> — Dance forms of the states · <strong>Onam Twogether</strong> — Pair Ramp Walk · <strong>Onam Communal Skit</strong> — By Kids · <strong>Soulful Medley</strong> — Apoorva &amp; Deepthi</div></div>
+        </div>
+        <div class="sch-row">
+          <div class="sch-left"><span class="sch-pill">11:05–11:45 AM</span></div>
+          <div class="sch-right"><div class="sch-prog">🥋 Kalaripayattu</div><div class="sch-detail">Traditional Kerala martial art showcasing agility, discipline, combat techniques, weapon skills and physical prowess.</div></div>
+        </div>
+        <div class="sch-row">
+          <div class="sch-left"><span class="sch-pill">11:45 AM–12:45 PM</span></div>
+          <div class="sch-right"><div class="sch-prog">🎯 Onam Games</div><div class="sch-detail">Lemon &amp; Spoon · Biscuit Bite · Musical Chairs · Blindfolded "Onam Viral Walk" <span style="font-size:10px;color:#f97316;font-weight:700">· Spot Registrations</span></div></div>
+        </div>
+        <div class="sch-row">
+          <div class="sch-left"><span class="sch-pill sadya">12:00 PM+</span></div>
+          <div class="sch-right"><div class="sch-prog">🍛 Onam Sadhya</div><div class="sch-detail">Served in batches for a smooth dining experience. <strong>Your ticket is your Sadhya Coupon</strong> — show QR or Ticket ID at the Sadhya Hall gate.</div></div>
+        </div>
+        <div class="sch-row">
+          <div class="sch-left"><span class="sch-pill">2:30–3:15 PM</span></div>
+          <div class="sch-right"><div class="sch-prog">💪 Tug of War</div><div class="sch-detail">BA Residents — Gents, Ladies, Teens &amp; Kids</div></div>
+        </div>
+        <div class="sch-row">
+          <div class="sch-left"><span class="sch-pill">3:15 PM+</span></div>
+          <div class="sch-right"><div class="sch-prog">🏆 Prize Distribution &amp; Felicitation</div><div class="sch-detail">Winners of games and other competitions; felicitation of participants and contributors.</div></div>
+        </div>
+        <div class="sch-note">📌 Onam Sadhya commences from <strong>12:00 PM onwards</strong> and will be served in batches while scheduled activities continue in parallel.</div>
       </div>
-      <div class="sch-row">
-        <div class="sch-left"><span class="sch-pill">9:45–9:55 AM</span></div>
-        <div class="sch-right"><div class="sch-prog">🎊 Welcome &amp; Inauguration</div><div class="sch-detail">Welcome Address, Lamp Lighting &amp; Opening Ceremony.</div></div>
-      </div>
-      <div class="sch-row">
-        <div class="sch-left"><span class="sch-pill">9:55–11:05 AM</span></div>
-        <div class="sch-right"><div class="sch-prog">🎭 Cultural Programs</div><div class="sch-detail"><strong>Communal Harmony</strong> — Dance forms of the states · <strong>Onam Twogether</strong> — Pair Ramp Walk · <strong>Skit - "The Onam Origins"</strong> — By Kids · <strong>Soulful Medley</strong> — Apoorva &amp; Deepthi</div></div>
-      </div>
-      <div class="sch-row">
-        <div class="sch-left"><span class="sch-pill">11:05–11:45 AM</span></div>
-        <div class="sch-right"><div class="sch-prog">🥋 Kalaripayattu</div><div class="sch-detail">Traditional Kerala martial art showcasing agility, discipline, combat techniques, weapon skills and physical prowess.</div></div>
-      </div>
-      <div class="sch-row">
-        <div class="sch-left"><span class="sch-pill">11:45 AM–12:45 PM</span></div>
-        <div class="sch-right"><div class="sch-prog">🎯 Onam Games</div><div class="sch-detail">Lemon &amp; Spoon · Biscuit Bite · Musical Chairs · Blindfolded "Onam Viral Walk" <span style="font-size:10px;color:#f97316;font-weight:700">· Spot Registrations</span></div></div>
-      </div>
-      <div class="sch-row">
-        <div class="sch-left"><span class="sch-pill sadya">12:00 PM+</span></div>
-        <div class="sch-right"><div class="sch-prog">🍛 Onam Sadhya</div><div class="sch-detail">Served in batches for a smooth dining experience. <strong>Your ticket is your Sadhya Coupon</strong> — show QR or Ticket ID at the Sadhya Hall gate.</div></div>
-      </div>
-      <div class="sch-row">
-        <div class="sch-left"><span class="sch-pill">2:30–3:15 PM</span></div>
-        <div class="sch-right"><div class="sch-prog">💪 Tug of War</div><div class="sch-detail">BA Residents — Gents, Ladies, Teens &amp; Kids</div></div>
-      </div>
-      <div class="sch-row">
-        <div class="sch-left"><span class="sch-pill">3:15 PM+</span></div>
-        <div class="sch-right"><div class="sch-prog">🏆 Prize Distribution &amp; Felicitation</div><div class="sch-detail">Winners of games and other competitions; felicitation of participants and contributors.</div></div>
-      </div>
-      <div class="sch-note">📌 Onam Sadhya commences from <strong>12:00 PM onwards</strong> and will be served in batches while scheduled activities continue in parallel.</div>
+
     </div>
   </div>
 </div>
@@ -1198,6 +1231,10 @@ function openSchedule() {
 }
 function closeSchedule() {
   document.getElementById("sch-overlay").classList.remove("open");
+}
+function switchSchDay(day) {
+  document.querySelectorAll(".sch-tab").forEach(t => t.classList.toggle("active", t.dataset.day === day));
+  document.querySelectorAll(".sch-day").forEach(d => d.classList.toggle("active", d.dataset.day === day));
 }
 
 function openMyTicket() {
