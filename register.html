@@ -75,6 +75,10 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans
 .hero-dot.active { background: #fff; transform: scale(1.3); }
 
 /* Highlights */
+/* Deadline badge */
+.deadline-wrap { padding: 14px 16px 2px; text-align: center; }
+.deadline-badge { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #21654a, #2d8a63); color: #fff; font-size: 13px; font-weight: 700; padding: 9px 18px; border-radius: 999px; letter-spacing: .01em; box-shadow: 0 2px 10px rgba(33,101,74,.35); animation: badge-pulse 1.8s ease-in-out infinite; }
+@keyframes badge-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
 .hi-intro { text-align: center; margin-bottom: 14px; }
 .hi-q { font-size: 18px; font-weight: 900; color: #0f2218; line-height: 1.3; }
 .hi-qsub { font-size: 11px; color: var(--brand); font-weight: 600; margin-top: 4px; }
@@ -93,10 +97,6 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans
 @keyframes heart-pop { 0% { transform: scale(0) translateY(0); opacity: 1; } 50% { transform: scale(1.6) translateY(-8px); opacity: 1; } 100% { transform: scale(1) translateY(-24px); opacity: 0; } }
 
 /* Ticker */
-.ticker-wrap { background: linear-gradient(90deg, #0d3326, #164f3a, #0d3326); overflow: hidden; padding: 7px 0; position: relative; z-index: 10; border-bottom: 2px solid #d5a83b; }
-.ticker-track { display: flex; flex-wrap: nowrap; will-change: transform; }
-.ticker-item { display: inline-flex; align-items: center; flex-shrink: 0; white-space: nowrap; padding: 0 40px; font-size: 13px; font-weight: 700; color: #fff; letter-spacing: .02em; }
-.ticker-item .ticker-sep { margin: 0 12px; opacity: .6; }
 .home-btn { display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.18); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,.35); color: #fff; padding: 7px; border-radius: 50%; cursor: pointer; position: absolute; bottom: 12px; left: 12px; z-index: 10; font-family: inherit; transition: background .15s; width: 32px; height: 32px; }
 .home-btn:hover { background: rgba(255,255,255,.3); }
 .steps { display: flex; justify-content: center; gap: 0; background: rgba(255,255,255,.7); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); }
@@ -389,11 +389,9 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans
   </div>
 </div>
 
-<!-- Ticker -->
-<div class="ticker-wrap" role="marquee" aria-label="Registration closing notice">
-  <div class="ticker-track">
-    <span class="ticker-item">📢 Registration closes on <strong>Thursday, 24th September at 8:00 PM</strong> <span class="ticker-sep">•</span> Book your Sadhya coupons before the portal closes! 🌼</span>
-  </div>
+<!-- Deadline badge -->
+<div class="deadline-wrap">
+  <div class="deadline-badge">📢 Registration closes Thursday, 24 Sep at 8:00 PM</div>
 </div>
 
 <!-- Program highlights -->
@@ -1358,22 +1356,6 @@ function toast(msg) {
   setTimeout(() => el.classList.remove("show"), 3200);
 }
 
-// Ticker scroll
-function initTicker() {
-  var track = document.querySelector(".ticker-track");
-  if (!track || window.matchMedia("(prefers-reduced-motion:reduce)").matches) return;
-  Array.from(track.children).forEach(function(item){ track.appendChild(item.cloneNode(true)); });
-  setTimeout(function() {
-    var half = track.scrollWidth / 2;
-    if (!half) return;
-    var dur = (half / 50).toFixed(1); // 50px/s
-    var s = document.createElement("style");
-    s.textContent = "@keyframes tkr{from{transform:translateX(0)}to{transform:translateX(-" + half + "px)}}";
-    document.head.appendChild(s);
-    track.style.animation = "tkr " + dur + "s linear infinite";
-  }, 200);
-}
-window.addEventListener("load", initTicker);
 </script>
 
 <div class="footer-wave-wrap" aria-hidden="true">
