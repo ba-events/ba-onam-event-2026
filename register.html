@@ -1358,24 +1358,22 @@ function toast(msg) {
   setTimeout(() => el.classList.remove("show"), 3200);
 }
 
-// Ticker scroll — RAF-based for reliable mobile support
-(function () {
-  const track = document.querySelector(".ticker-track");
-  if (!track || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const origItems = Array.from(track.children);
-  origItems.forEach(item => track.appendChild(item.cloneNode(true)));
-  let x = 0, half = 0;
-  const speed = 0.45;
-  function tick() {
-    if (!half) { half = track.scrollWidth / 2; }
-    if (!half) { requestAnimationFrame(tick); return; } // wait for layout
-    x += speed;
-    if (x >= half) x -= half;
-    track.style.transform = "translateX(-" + x.toFixed(2) + "px)";
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-})();
+// Ticker scroll
+function initTicker() {
+  var track = document.querySelector(".ticker-track");
+  if (!track || window.matchMedia("(prefers-reduced-motion:reduce)").matches) return;
+  Array.from(track.children).forEach(function(item){ track.appendChild(item.cloneNode(true)); });
+  setTimeout(function() {
+    var half = track.scrollWidth / 2;
+    if (!half) return;
+    var dur = (half / 50).toFixed(1); // 50px/s
+    var s = document.createElement("style");
+    s.textContent = "@keyframes tkr{from{transform:translateX(0)}to{transform:translateX(-" + half + "px)}}";
+    document.head.appendChild(s);
+    track.style.animation = "tkr " + dur + "s linear infinite";
+  }, 200);
+}
+window.addEventListener("load", initTicker);
 </script>
 
 <div class="footer-wave-wrap" aria-hidden="true">
